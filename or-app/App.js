@@ -6,16 +6,23 @@ const orData = [
   {
     id: 'OR 1',
     surgeonName: 'Dr. Smith',
-    raName: 'R.N. Johnson',
-    surgeryType: 'Cardiac Surgery',
+    raName: 'Dr. Johnson',
+    surgeryType: 'Craniotomy',
     surgeryStage: 'Pre-Op',
   },
   {
     id: 'OR 2',
     surgeonName: 'Dr. Jones',
-    raName: 'R.N. Williams',
+    raName: 'Dr. Williams',
     surgeryType: 'Appendectomy',
-
+    surgeryStage: 'Intubation',
+  },
+  {
+    id: 'OR 3',
+    surgeonName: 'Dr Vogel',
+    raName: 'Dr. Neils',
+    surgeryType: 'Liver Transplant',
+    surgeryStage: 'Dead',
   }
 ];
 
