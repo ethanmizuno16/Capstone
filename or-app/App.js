@@ -6,7 +6,7 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App.</Text>
       <Text style={styles.description}>
-        Testing text to go here.
+        Testing
       </Text>
     </View>
   );
