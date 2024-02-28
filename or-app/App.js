@@ -85,6 +85,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     borderRadius: 10,
     padding: 20,
+    width: 150, // Set a fixed width for square shape
+    height: 150, // Set a fixed height for square shape
+    justifyContent: 'center', // centers the text vertically
+    alignItems: 'center',
     marginVertical: 10,
     marginHorizontal: 16,
     // Add shadows and other styling as per your design
