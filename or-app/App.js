@@ -24,7 +24,37 @@ const orData = [
     raName: 'Dr. Neils',
     surgeryType: 'Liver Transplant',
     surgeryStage: 'Dead',
-  }
+  },
+  { id: 'OR 4',
+    surgeonName: 'Dr. Lee',
+    raName: 'Dr. Kim',
+    surgeryType: 'Heart Transplant', 
+    surgeryStage: 'Incision' 
+  },
+  { id: 'OR 5',
+   surgeonName: 'Dr. Allen',
+   raName: 'Dr. Shaw',
+   surgeryType: 'Knee Replacement',
+   surgeryStage: 'Pre-Op'
+  },
+  { id: 'OR 6',
+  surgeonName: 'Dr. Barnes',
+  raName: 'Dr. Lutz',
+  surgeryType:'Hip Replacement',
+  surgeryStage: 'Post-Op'
+  },
+  { id: 'OR 7',
+  surgeonName: 'Dr. Miles',
+  raName: 'Dr. Watson',
+  surgeryType: 'Gastric Bypass',
+  surgeryStage: 'Surgery'
+  },
+  { id: 'OR 8',
+  surgeonName: 'Dr. Wright',
+  raName: 'Dr. Torres',
+  surgeryType: 'Lobectomy',
+  surgeryStage: 'Stitching'
+  },
 ];
 
 const getSurgeryProgress = (surgeryStage) => {
@@ -35,7 +65,7 @@ const getSurgeryProgress = (surgeryStage) => {
     'Surgery': 0.7,
     'Stitching': 0.9,
     'Post-Op': 1.0,
-    'Dead': 0, // Assuming 0 for 'Dead', you may need to handle this case separately
+    'Dead': 0,
   };
   return stages[surgeryStage] || 0;
 };
