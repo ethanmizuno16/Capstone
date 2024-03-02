@@ -75,7 +75,7 @@ const OrCard = ({ or }) => {
   const progress = getSurgeryProgress(or.surgeryStage);
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>OR #{or.id}</Text>
+      <Text style={styles.cardTitle}>{or.id}</Text>
       <Text>Surgeon Name: {or.surgeonName}</Text>
       <Text>R.A. Name: {or.raName}</Text>
       <Text>Surgery Type: {or.surgeryType}</Text>
@@ -89,6 +89,7 @@ const OrCard = ({ or }) => {
 
 
 export default function App() {
+  const numColumns = 2;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App.</Text>
@@ -99,6 +100,7 @@ export default function App() {
         data={orData}
         renderItem={({ item }) => <OrCard or={item} />}
         keyExtractor={(item) => item.id}
+        numColumns={numColumns}
         style={styles.list}
       />
     </View>
