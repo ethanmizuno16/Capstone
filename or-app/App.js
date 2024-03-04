@@ -92,10 +92,9 @@ export default function App() {
   const numColumns = 2;
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App.</Text>
+      <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App</Text>
       <Text style={styles.description}>
-        T
-      Below is the current status of each Operating Room:
+        Current status of each Operating Room:
       </Text>
       <FlatList
         data={orData}
@@ -121,6 +120,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10, // Add some space below the title
+    marginTop: 20,
+    marginHorizontal: 5, // Horizontal margin for better text alignment
+
   },
   description: {
     fontSize: 18,
