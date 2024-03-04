@@ -1,6 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Dimensions } from 'react-native';
 import { Bar } from 'react-native-progress';
+
+// Calculate dimensions for responsive layout
+const windowWidth = Dimensions.get('window').width;
+const cardMargin = 16;
+const numColumns = 2;
+const cardWidth = (windowWidth / numColumns) - (cardMargin * 2) - (cardMargin * (numColumns - 1));
 
 // Example data for the ORs, replace with your actual data
 const orData = [
@@ -102,6 +108,7 @@ export default function App() {
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         style={styles.list}
+        contentContainerStyle={styles.flatListContentContainer} // Adjust this for better centering
       />
     </View>
   );
@@ -112,53 +119,53 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'flex-start', // Changed to flex-start to align items to the top
-    paddingTop: 50, // Add padding at the top
+    justifyContent: 'flex-start',
+    paddingTop: 50,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10, // Add some space below the title
+    marginBottom: 10,
     marginTop: 20,
-    marginHorizontal: 5, // Horizontal margin for better text alignment
-
+    marginHorizontal: 5,
   },
   description: {
     fontSize: 18,
     textAlign: 'center',
-    marginHorizontal: 20, // Horizontal margin for better text alignment
-    marginBottom: 20, // Space before the list starts
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   list: {
-    width: '100%', // List takes full width of the screen
+    width: '100%',
+  },
+  flatListContentContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card: {
     backgroundColor: 'lightblue',
     borderRadius: 10,
     padding: 20,
-    width: 150, // Set a fixed width for square shape
-    height: 150, // Set a fixed height for square shape
-    justifyContent: 'center', // centers the text vertically
+    width: cardWidth, // Dynamically calculated width
+    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
-    marginHorizontal: 16,
-    // Add shadows and other styling as per your design
+    marginHorizontal: cardMargin,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  // Add additional styling as needed
   progressBarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%', // Ensure the container fills the width of the card
+    width: '100%',
   },
   progressBar: {
-    flex: 1, // Allow the progress bar to fill as much space as possible
+    flex: 1,
   },
   progressText: {
-    paddingLeft: 10, // Add some space between the progress bar and the text
+    paddingLeft: 10,
   },
 });
