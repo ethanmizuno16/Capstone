@@ -71,7 +71,7 @@ const getSurgeryProgress = (surgeryStage) => {
 };
 
 // OR Card component
-const OrCard = ({ or }) => {
+const OrCard = ({ or, onPress }) => {
   const progress = getSurgeryProgress(or.surgeryStage);
   const onPress = () => {
     console.log(`OR ${or.id} pressed!`);

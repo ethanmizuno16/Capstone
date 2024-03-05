@@ -1,6 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 
+const getSurgeryProgress = (surgeryStage) => {
+    const stages = {
+      'Pre-Op': 0.1,
+      'Intubation': 0.3,
+      'Incision': 0.5,
+      'Surgery': 0.7,
+      'Stitching': 0.9,
+      'Post-Op': 1.0,
+      'Dead': 0,
+    };
+    return stages[surgeryStage] || 0;
+  };
+
 const DetailedOR = ({ route, navigation }) => {
   // Extract the `or` object passed as a parameter from the navigation route
   const { or } = route.params;
