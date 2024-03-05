@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Bar } from 'react-native-progress';
 
 // Example data for the ORs, replace with your actual data
@@ -71,10 +71,11 @@ const getSurgeryProgress = (surgeryStage) => {
 };
 
 // OR Card component
-const OrCard = ({ or }) => {
+const OrCard = ({ or, onPress }) => {
   const progress = getSurgeryProgress(or.surgeryStage);
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <Text style={styles.cardTitle}>{or.id}</Text>
       <Text>Surgeon Name: {or.surgeonName}</Text>
       <Text>R.A. Name: {or.raName}</Text>
@@ -83,12 +84,13 @@ const OrCard = ({ or }) => {
         <Bar progress={progress} width={null} style={styles.progressBar} />
         <Text style={styles.progressText}>{`${Math.round(progress * 100)}%`}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 
-export default function App() {
+export default function HomeInterface({ navigation }) {
+  const numColumns = 2;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App</Text>
@@ -97,7 +99,12 @@ export default function App() {
       </Text>
       <FlatList
         data={orData}
-        renderItem={({ item }) => <OrCard or={item} />}
+        renderItem={({ item }) => (
+        <OrCard 
+            or={item}
+            onPress={() => navigation.navigate('DetailedOR', { or: item })} 
+        />
+        )}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         style={styles.list}
