@@ -71,11 +71,9 @@ const getSurgeryProgress = (surgeryStage) => {
 };
 
 // OR Card component
-const OrCard = ({ or }) => {
+const OrCard = ({ or, onPress }) => {
   const progress = getSurgeryProgress(or.surgeryStage);
-  const onPress = () => {
-    console.log(`OR ${or.id} pressed!`);
-  };
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Text style={styles.cardTitle}>{or.id}</Text>
