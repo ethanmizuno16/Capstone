@@ -73,8 +73,6 @@ const getSurgeryProgress = (surgeryStage) => {
 // OR Card component
 const OrCard = ({ or, onPress }) => {
   const progress = getSurgeryProgress(or.surgeryStage);
-  const onPress = () => {
-    console.log(`OR ${or.id} pressed!`);
   };
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -104,7 +102,7 @@ export default function HomeInterface({ navigation }) {
         renderItem={({ item }) => (
         <OrCard 
             or={item}
-            onPress={() => navigation.navigate('OrDetail', { or: item })} 
+            onPress={() => navigation.navigate('DetailedOR', { or: item })} 
         />
         )}
         keyExtractor={(item) => item.id}
