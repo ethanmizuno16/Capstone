@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import { Bar } from 'react-native-progress';
 
 const getSurgeryProgress = (surgeryStage) => {
     const stages = {
@@ -16,16 +17,21 @@ const getSurgeryProgress = (surgeryStage) => {
 
 const DetailedOR = ({ route, navigation }) => {
   const { or } = route.params;
+  const progress = getSurgeryProgress(or.surgeryStage);
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <View style={styles.detailBox}>
-          <Text style={styles.title}>OR #{or.id}</Text>
+          <Text style={styles.title}>{or.id}</Text>
           <Text style={styles.detailText}>Surgeon Name: {or.surgeonName}</Text>
           <Text style={styles.detailText}>R.A. Name: {or.raName}</Text>
           <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
           <Text style={styles.detailText}>Surgery Stage: {or.surgeryStage}</Text>
+          <View style={styles.progressBarContainer}>
+            <Bar progress={progress} width={null} style={styles.progressBar} />
+            <Text style={styles.progressText}>{`${Math.round(progress * 100)}% Complete`}</Text>
+          </View>
         </View>
 
         <View style={styles.largeBox}>
@@ -54,7 +60,7 @@ const styles = StyleSheet.create({
         paddingTop: 20,
       },
       detailBox: {
-        backgroundColor: 'lightblue',
+        backgroundColor: 'plum',
         borderRadius: 10,
         padding: 20,
         width: '90%', // Adjust the width as necessary
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start', // Align text to the start of the box
       },
       largeBox: {
-        backgroundColor: 'lightblue',
+        backgroundColor: 'lightsalmon',
         borderRadius: 10,
         padding: 20,
         width: '90%', // Adjust the width as necessary
@@ -84,5 +90,16 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: 'bold',
       },
-    });
+      progressBarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%', // Ensure the container fills the width of the card
+      },
+      progressBar: {
+        flex: 1, // Allow the progress bar to fill as much space as possible
+      },
+      progressText: {
+        paddingLeft: 20, // Add some space between the progress bar and the text
+      },
+});
 export default DetailedOR;
