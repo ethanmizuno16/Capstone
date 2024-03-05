@@ -86,7 +86,6 @@ const OrCard = ({ or, onPress }) => {
       </View>
     </TouchableOpacity>
   );
-};
 
 
 export default function HomeInterface({ navigation }) {
