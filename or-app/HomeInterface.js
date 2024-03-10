@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Bar } from 'react-native-progress';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 // Example data for the ORs, replace with your actual data
 const orData = [
@@ -97,7 +98,7 @@ export default function HomeInterface({ navigation }) {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-          <Icon name="ios-menu" size={25} color="black" /> {/* Replace with your icon */}
+          <Icon name="menu" size={25} color="black" />
         </TouchableOpacity>
       ),
     });
