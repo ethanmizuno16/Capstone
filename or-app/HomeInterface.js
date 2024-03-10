@@ -97,7 +97,7 @@ export default function HomeInterface({ navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
           <Icon name="menu" size={25} color="black" />
         </TouchableOpacity>
       ),
