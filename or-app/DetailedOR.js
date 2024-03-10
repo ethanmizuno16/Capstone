@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { Bar } from 'react-native-progress';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const getSurgeryProgress = (surgeryStage) => {
     const stages = {
@@ -18,6 +19,17 @@ const getSurgeryProgress = (surgeryStage) => {
 const DetailedOR = ({ route, navigation }) => {
   const { or } = route.params;
   const progress = getSurgeryProgress(or.surgeryStage);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+          <Icon name="menu" size={25} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
 
   return (
     <ScrollView style={styles.scrollView}>
