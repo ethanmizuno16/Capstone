@@ -91,6 +91,18 @@ const OrCard = ({ or, onPress }) => {
 
 export default function HomeInterface({ navigation }) {
   const numColumns = 2;
+
+  // writing the drawer menu slider
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+          <Icon name="ios-menu" size={25} color="black" /> {/* Replace with your icon */}
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App</Text>
