@@ -115,6 +115,7 @@ export default function HomeInterface({ navigation }) {
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         style={styles.list}
+        contentContainerStyle={styles.contentContainer} // Apply the new style here
       />
     </View>
   );
