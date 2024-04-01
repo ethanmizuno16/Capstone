@@ -1,3 +1,5 @@
+// VITALS BRANCH
+
 import React from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { Bar } from 'react-native-progress';
