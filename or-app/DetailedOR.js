@@ -1,6 +1,6 @@
 // VITALS BRANCH
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { Bar } from 'react-native-progress';
 
@@ -21,6 +21,29 @@ const DetailedOR = ({ route, navigation }) => {
   const { or } = route.params;
   const progress = getSurgeryProgress(or.surgeryStage);
 
+  const [biosignalData, setBiosignalData] = useState(null);
+
+  useEffect(() => {
+    // Replace '1' with the actual case ID you want to fetch
+    const caseId = 1;
+    const url = `http://localhost:5000/api/get_vitals/${caseId}`;
+    
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        // Assuming the API returns an array of vitals
+        const vitals = data.vitals;
+        // For simplicity, we're only displaying the first ART value.
+        // You'll need to adapt this based on how you want to use the data.
+        const firstArtValue = vitals.length > 0 ? vitals[0][1] : 'No data';
+        setBiosignalData(firstArtValue);
+      })
+      .catch((error) => {
+        console.error('Error fetching biosignal data:', error);
+        setBiosignalData('Error loading data');
+      });
+  }, []);
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
@@ -36,9 +59,11 @@ const DetailedOR = ({ route, navigation }) => {
           </View>
         </View>
 
-        <View style={styles.largeBox}>
-          <Text style={styles.boxContent}>Biosignal Data</Text>
-        </View>
+      <View style={styles.largeBox}>
+        <Text style={styles.boxContent}>
+          Biosignal Data: {biosignalData !== null ? biosignalData : 'Loading...'}
+        </Text>
+      </View>
 
         <View style={styles.largeBox}>
           <Text style={styles.boxContent}>Messaging</Text>
