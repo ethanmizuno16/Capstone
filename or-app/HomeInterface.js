@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { Bar } from 'react-native-progress';
+
 
 // Example data for the ORs, replace with your actual data
 const orData = [
@@ -71,6 +72,12 @@ const getSurgeryProgress = (surgeryStage) => {
 };
 
 // OR Card component
+const {width} = Dimensions.get('window');
+const numColumns = 2;
+const cardMargin = 16; // Margin as defined in your card style
+const totalHorizontalMargin = cardMargin * 2 * numColumns; // Total horizontal margin considering both sides
+const cardWidth = (width - totalHorizontalMargin) / numColumns; // Dynamic card width
+
 const OrCard = ({ or, onPress }) => {
   const progress = getSurgeryProgress(or.surgeryStage);
 
@@ -108,6 +115,7 @@ export default function HomeInterface({ navigation }) {
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         style={styles.list}
+        contentContainerStyle={styles.contentContainer} // Apply the new style here
       />
     </View>
   );
@@ -143,13 +151,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     borderRadius: 10,
     padding: 20,
-    width: 150, // Set a fixed width for square shape
-    height: 150, // Set a fixed height for square shape
-    justifyContent: 'center', // centers the text vertically
+    width: cardWidth, // Use the dynamic width
+    height: 150, // Keeping the height as before
+    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
-    marginHorizontal: 16,
-    // Add shadows and other styling as per your design
+    marginHorizontal: cardMargin,
+  },
+  contentContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardTitle: {
     fontSize: 18,
