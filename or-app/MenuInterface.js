@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeInterface from './HomeInterface';
 import DetailedOR from './DetailedOR';
-// Import other screens if necessary
+import ProfileScreen from './ProfileScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -12,7 +12,7 @@ const Drawer = createDrawerNavigator();
 function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeInterface} options={{ title: 'OR List' }} />
+      <Stack.Screen name="Operating Room List" component={HomeInterface} options={{ title: 'OR List' }} />
       <Stack.Screen name="DetailedOR" component={DetailedOR} options={{ title: 'OR Details' }} />
     </Stack.Navigator>
   );
@@ -22,7 +22,8 @@ function HomeStack() {
 const MenuInterface = () => {
   return (
     <Drawer.Navigator initialRouteName="HomeStack">
-      <Drawer.Screen name="HomeStack" component={HomeStack} />
+      <Drawer.Screen name="Home" component={HomeStack} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} />
     </Drawer.Navigator>
   );
 };
