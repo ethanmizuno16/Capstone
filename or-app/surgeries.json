@@ -1,0 +1,43 @@
+[
+    {
+      "surgeryType": "Open Appendectomy",
+      "steps": [
+        "Intubation",
+        "Initial skin incision",
+        "Peritoneum incision",
+        "Isolation of appendix",
+        "Appendix Removal",
+        "Irrigation",
+        "Closing",
+        "Extubation"
+      ]
+    },
+    {
+      "surgeryType": "Single Lung Transplant",
+      "steps": [
+        "Intubation",
+        "Initial skin incision",
+        "Lung Exposure",
+        "Vascular and Bronchial Dissection",
+        "Removal of diseased lung",
+        "Lung implantation",
+        "Vascular and Bronchial Anastomoses",
+        "Reperfusion",
+        "Closing",
+        "Extubation"
+      ]
+    },
+    {
+      "surgeryType": "Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)",
+      "steps": [
+        "Intubation",
+        "Initial skin incision",
+        "Spine exposure",
+        "Removal of damaged disc",
+        "Insertion of bone graft",
+        "Closing",
+        "Extubation"
+      ]
+    }
+  ]
+  
