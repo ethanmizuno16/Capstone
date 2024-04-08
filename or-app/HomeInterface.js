@@ -23,6 +23,27 @@ const orData = [
     surgeryType: 'Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)',
     surgeryStage: 'Spine exposure',
   },
+  {
+    id: 'OR 4',
+    surgeonName: 'Dr. Lee',
+    raName: 'Dr. Kim',
+    surgeryType: 'Cesarean Section',
+    surgeryStage: 'Suctioning of Amniotic Fluids',
+  },
+  {
+    id: 'OR 5',
+    surgeonName: 'Dr. Gomez',
+    raName: 'Dr. Santos',
+    surgeryType: 'Herniorrhaphy (Repair)',
+    surgeryStage: 'Hernia isolation',
+  },
+  {
+    id: 'OR 6',
+    surgeonName: 'Dr. Patel',
+    raName: 'Dr. Murray',
+    surgeryType: 'Herniorrhaphy (Removal)',
+    surgeryStage: 'Initial incision',
+  },
 ];
 
 const { width } = Dimensions.get('window');

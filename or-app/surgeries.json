@@ -1,43 +1,80 @@
 [
-    {
-      "surgeryType": "Open Appendectomy",
-      "steps": [
-        "Intubation",
-        "Initial skin incision",
-        "Peritoneum incision",
-        "Isolation of appendix",
-        "Appendix Removal",
-        "Irrigation",
-        "Closing",
-        "Extubation"
-      ]
-    },
-    {
-      "surgeryType": "Single Lung Transplant",
-      "steps": [
-        "Intubation",
-        "Initial skin incision",
-        "Lung Exposure",
-        "Vascular and Bronchial Dissection",
-        "Removal of diseased lung",
-        "Lung implantation",
-        "Vascular and Bronchial Anastomoses",
-        "Reperfusion",
-        "Closing",
-        "Extubation"
-      ]
-    },
-    {
-      "surgeryType": "Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)",
-      "steps": [
-        "Intubation",
-        "Initial skin incision",
-        "Spine exposure",
-        "Removal of damaged disc",
-        "Insertion of bone graft",
-        "Closing",
-        "Extubation"
-      ]
-    }
-  ]
-  
+  {
+    "surgeryType": "Open Appendectomy",
+    "steps": [
+      "Intubation",
+      "Initial skin incision",
+      "Peritoneum incision",
+      "Isolation of appendix",
+      "Appendix Removal",
+      "Irrigation",
+      "Closing",
+      "Extubation"
+    ]
+  },
+  {
+    "surgeryType": "Single Lung Transplant",
+    "steps": [
+      "Intubation",
+      "Initial skin incision",
+      "Lung Exposure",
+      "Vascular and Bronchial Dissection",
+      "Removal of diseased lung",
+      "Lung implantation",
+      "Vascular and Bronchial Anastomoses",
+      "Reperfusion",
+      "Closing",
+      "Extubation"
+    ]
+  },
+  {
+    "surgeryType": "Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)",
+    "steps": [
+      "Intubation",
+      "Initial skin incision",
+      "Spine exposure",
+      "Removal of damaged disc",
+      "Insertion of bone graft",
+      "Closing",
+      "Extubation"
+    ]
+  },
+  {
+    "surgeryType": "Cesarean Section",
+    "steps": [
+      "Intubation",
+      "Initial skin incision",
+      "Secondary incisions",
+      "Suctioning of Amniotic Fluids",
+      "Delivery of Head",
+      "Delivery of Shoulders and Body",
+      "Delivery of Placenta",
+      "Closing",
+      "Extubation"
+    ]
+  },
+  {
+    "surgeryType": "Herniorrhaphy (Repair)",
+    "steps": [
+      "Intubation",
+      "Initial incision",
+      "Hernia isolation",
+      "Hernia reduction",
+      "Primary repair",
+      "Closing",
+      "Extubation"
+    ]
+  },
+  {
+    "surgeryType": "Herniorrhaphy (Removal)",
+    "steps": [
+      "Intubation",
+      "Initial incision",
+      "Hernia isolation",
+      "Hernia reduction",
+      "Primary repair",
+      "Closing",
+      "Extubation"
+    ]
+  }
+]
