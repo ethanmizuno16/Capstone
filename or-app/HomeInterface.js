@@ -1,181 +1,89 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
-import { Bar } from 'react-native-progress';
 
-
-// Example data for the ORs, replace with your actual data
 const orData = [
   {
     id: 'OR 1',
     surgeonName: 'Dr. Smith',
     raName: 'Dr. Johnson',
-    surgeryType: 'Craniotomy',
-    surgeryStage: 'Pre-Op',
+    surgeryType: 'Open Appendectomy',
+    surgeryStage: 'Intubation',
   },
   {
     id: 'OR 2',
     surgeonName: 'Dr. Jones',
     raName: 'Dr. Williams',
-    surgeryType: 'Appendectomy',
-    surgeryStage: 'Intubation',
+    surgeryType: 'Single Lung Transplant',
+    surgeryStage: 'Lung Exposure',
   },
   {
     id: 'OR 3',
-    surgeonName: 'Dr Vogel',
+    surgeonName: 'Dr. Vogel',
     raName: 'Dr. Neils',
-    surgeryType: 'Liver Transplant',
-    surgeryStage: 'Dead',
-  },
-  { id: 'OR 4',
-    surgeonName: 'Dr. Lee',
-    raName: 'Dr. Kim',
-    surgeryType: 'Heart Transplant', 
-    surgeryStage: 'Incision' 
-  },
-  { id: 'OR 5',
-   surgeonName: 'Dr. Allen',
-   raName: 'Dr. Shaw',
-   surgeryType: 'Knee Replacement',
-   surgeryStage: 'Pre-Op'
-  },
-  { id: 'OR 6',
-  surgeonName: 'Dr. Barnes',
-  raName: 'Dr. Lutz',
-  surgeryType:'Hip Replacement',
-  surgeryStage: 'Post-Op'
-  },
-  { id: 'OR 7',
-  surgeonName: 'Dr. Miles',
-  raName: 'Dr. Watson',
-  surgeryType: 'Gastric Bypass',
-  surgeryStage: 'Surgery'
-  },
-  { id: 'OR 8',
-  surgeonName: 'Dr. Wright',
-  raName: 'Dr. Torres',
-  surgeryType: 'Lobectomy',
-  surgeryStage: 'Stitching'
+    surgeryType: 'Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)',
+    surgeryStage: 'Spine exposure',
   },
 ];
 
-const getSurgeryProgress = (surgeryStage) => {
-  const stages = {
-    'Pre-Op': 0.1,
-    'Intubation': 0.3,
-    'Incision': 0.5,
-    'Surgery': 0.7,
-    'Stitching': 0.9,
-    'Post-Op': 1.0,
-    'Dead': 0,
-  };
-  return stages[surgeryStage] || 0;
-};
+const { width } = Dimensions.get('window');
+const cardWidth = width * 0.9;
 
-// OR Card component
-const {width} = Dimensions.get('window');
-const numColumns = 2;
-const cardMargin = 16; // Margin as defined in your card style
-const totalHorizontalMargin = cardMargin * 2 * numColumns; // Total horizontal margin considering both sides
-const cardWidth = (width - totalHorizontalMargin) / numColumns; // Dynamic card width
-
-const OrCard = ({ or, onPress }) => {
-  const progress = getSurgeryProgress(or.surgeryStage);
-
-  return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Text style={styles.cardTitle}>{or.id}</Text>
-      <Text>Surgeon Name: {or.surgeonName}</Text>
-      <Text>R.A. Name: {or.raName}</Text>
-      <Text>Surgery Type: {or.surgeryType}</Text>
-      <View style={styles.progressBarContainer}>
-        <Bar progress={progress} width={null} style={styles.progressBar} />
-        <Text style={styles.progressText}>{`${Math.round(progress * 100)}%`}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-
-export default function HomeInterface({ navigation }) {
-  const numColumns = 2;
+const HomeInterface = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Remote Monitoring Anesthesia App</Text>
-      <Text style={styles.description}>
-        Current status of each Operating Room:
-      </Text>
       <FlatList
         data={orData}
         renderItem={({ item }) => (
-        <OrCard 
-            or={item}
-            onPress={() => navigation.navigate('DetailedOR', { or: item })} 
-        />
+          <TouchableOpacity 
+            style={styles.card} 
+            onPress={() => navigation.navigate('DetailedOR', { or: item })}
+          >
+            <Text style={styles.cardTitle}>{item.id}: {item.surgeryType}</Text>
+            <Text style={styles.cardContent}>Surgeon: {item.surgeonName}</Text>
+            <Text style={styles.cardContent}>R.A.: {item.raName}</Text>
+            <Text style={styles.cardContent}>Stage: {item.surgeryStage}</Text>
+          </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
-        numColumns={numColumns}
-        style={styles.list}
-        contentContainerStyle={styles.contentContainer} // Apply the new style here
+        contentContainerStyle={styles.contentContainer}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'flex-start', // Changed to flex-start to align items to the top
-    paddingTop: 50, // Add padding at the top
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10, // Add some space below the title
-    marginTop: 20,
-    marginHorizontal: 5, // Horizontal margin for better text alignment
-
-  },
-  description: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginHorizontal: 20, // Horizontal margin for better text alignment
-    marginBottom: 20, // Space before the list starts
-  },
-  list: {
-    width: '100%', // List takes full width of the screen
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
   },
   card: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 20,
-    width: cardWidth, // Use the dynamic width
-    height: 150, // Keeping the height as before
-    justifyContent: 'center',
-    alignItems: 'center',
     marginVertical: 10,
-    marginHorizontal: cardMargin,
-  },
-  contentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: cardWidth,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
   },
-  // Add additional styling as needed
-  progressBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%', // Ensure the container fills the width of the card
+  cardContent: {
+    fontSize: 16,
+    color: '#666',
   },
-  progressBar: {
-    flex: 1, // Allow the progress bar to fill as much space as possible
-  },
-  progressText: {
-    paddingLeft: 10, // Add some space between the progress bar and the text
+  contentContainer: {
+    paddingTop: 20,
+    paddingBottom: 20,
   },
 });
+
+export default HomeInterface;
