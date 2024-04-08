@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
 
 const DetailedOR = ({ route, navigation }) => {
   const { or } = route.params;
@@ -20,12 +20,11 @@ const DetailedOR = ({ route, navigation }) => {
           {/* Placeholder for biosignal data */}
         </View>
 
-        <View style={styles.largeBox}>
+        <TouchableOpacity 
+          style={styles.largeBox}
+          onPress={() => navigation.navigate('PushNotifications', { or: or })}>
           <Text style={styles.boxTitle}>Messaging</Text>
-          {/* Placeholder for messaging */}
-        </View>
-
-        <Button title="Go Back" onPress={() => navigation.goBack()} />
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
