@@ -6,7 +6,7 @@ import { Bar } from 'react-native-progress';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import casesData from './cases_filtered_json.json';
 import tracksData from './tracks_info_filtered_json.json';
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 
 
 // select a random case
