@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
-import { Bar } from 'react-native-progress';
 import casesData from './cases_filtered_json.json';
 import tracksData from './tracks_info_filtered_json.json';
 
@@ -19,22 +18,10 @@ const filterTracksByCaseId = (tracks, caseId, accessibleMachines) => {
     );
 };
 
-const getSurgeryProgress = (surgeryStage) => {
-    const stages = {
-        'Pre-Op': 0.1,
-        'Intubation': 0.3,
-        'Incision': 0.5,
-        'Surgery': 0.7,
-        'Stitching': 0.9,
-        'Post-Op': 1.0,
-        'Dead': 0,
-    };
-    return stages[surgeryStage] || 0;
-};
+
 
 const DetailedOR = ({ route, navigation }) => {
     const { or } = route.params;
-    const progress = getSurgeryProgress(or.surgeryStage);
 
     // grab surgery info from the case we picked
     // right now, it's a random case ID choice
@@ -138,10 +125,6 @@ const DetailedOR = ({ route, navigation }) => {
                     <Text style={styles.detailText}>R.A. Name: {or.raName}</Text>
                     <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
                     <Text style={styles.detailText}>Surgery Stage: {or.surgeryStage}</Text>
-                    <View style={styles.progressBarContainer}>
-                        <Bar progress={progress} width={null} style={styles.progressBar} />
-                        <Text style={styles.progressText}>{`${Math.round(progress * 100)}% Complete`}</Text>
-                    </View>
                 </View>
 
                 <View style={styles.anesBox}>
