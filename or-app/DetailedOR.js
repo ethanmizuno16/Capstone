@@ -15,9 +15,12 @@ const selectRandomCase = (cases) => {
   return cases[randomIndex];
 };
 
-// filter tracks by case ID
-const filterTracksByCaseId = (tracks, caseId) => {
-  return tracks.filter((track) => track.caseid === caseId);
+// filter tracks by case ID and ensure the tnames are the ones we want
+const filterTracksByCaseId = (tracks, caseId, accessibleMachines) => {
+  return tracks.filter(track => 
+    track.caseid === caseId && 
+    (accessibleMachines.includes(track.tname))
+  );
 };
 
 const getSurgeryProgress = (surgeryStage) => {
@@ -37,27 +40,63 @@ const DetailedOR = ({ route, navigation }) => {
   const { or } = route.params;
   const progress = getSurgeryProgress(or.surgeryStage);
 
-  // State for selected surgery info and tracks
-  const [surgeryInfo, setSurgeryInfo] = useState(selectRandomCase(casesData));
+  // grab surgery info from the case we picked
+  // right now, it's a random case ID choice
+  const [surgeryInfo] = useState(selectRandomCase(casesData));
+  const opStart = surgeryInfo.opstart
+
+  // grab the info about which machines we recorded from
   const [tracksForCase, setTracksForCase] = useState([]);
+  const accessibleMachines = Array.from(new Set(
+    tracksForCase.map(item => item.tname)
+      .filter(tname => tname.startsWith('Solar8000/HR')) // just heart rate
+  ));
+  console.log(accessibleMachines)
+
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   useEffect(() => {
-    // Update tracks for the selected case
-    const filteredTracks = filterTracksByCaseId(tracksData, surgeryInfo.caseid);
+    // only get tracks for the selected case and tracks (HR only for now)
+    const filteredTracks = filterTracksByCaseId(tracksData, surgeryInfo.caseid, accessibleMachines);
     setTracksForCase(filteredTracks);
   }, [surgeryInfo]);
 
-  // Fetch data for selected track
   const fetchDataForTrack = async (tid) => {
     try {
       const response = await fetch(`https://api.vitaldb.net/${tid}`);
-      const data = await response.json();
-      console.log(data);
+      console.log(`https://api.vitaldb.net/${tid}`)
+      if (response.ok) {
+        const csvText = await response.text();
+        const data = csvToJSON(csvText);
+        console.log('Data Received')
+        console.log(data)
+      } else {
+        throw new Error('Response not successful');
+      }
     } catch (error) {
       console.error("Error fetching data from VitalDB:", error);
     }
   };
+  
+  const csvToJSON = (csv) => {
+    const lines = csv.split('\n');
+    const result = [];
+    const headers = lines[0].split(',');
+  
+    lines.slice(1).forEach((line) => {
+      const obj = {};
+      const currentline = line.split(',');
+  
+      headers.forEach((header, i) => {
+        obj[header] = currentline[i];
+      });
+  
+      result.push(obj);
+    });
+  
+    return result;
+  };
+  
 
   // Handle track selection
   const handleTrackSelect = (tid) => {
@@ -80,15 +119,18 @@ const DetailedOR = ({ route, navigation }) => {
           </View>
         </View>
 
-        <View style={styles.largeBox}>
-          <RNPickerSelect
+        <View style={styles.anesBox}>
+          {/* <RNPickerSelect
             onValueChange={(value) => handleTrackSelect(value)}
             items={tracksForCase.map((track) => ({ label: track.tname, value: track.tid }))}
             placeholder={{ label: 'Select a track...', value: null }}
-          />
-          <Text style={styles.boxContent}>
-            Type of Anesthesia: {surgeryInfo.ane_type}
+          /> */}
+          <Text style={styles.detailText}>
+            Type of Anesthesia: <Text style={styles.aneType}>{surgeryInfo.ane_type}</Text>
           </Text>
+          <Text style={styles.detailText}>Current Heart Rate: {surgeryInfo.ane_type}</Text>
+          <Text style={styles.detailText}>Current Blood Pressure: {surgeryInfo.ane_type}</Text>
+
         </View>
 
         <View style={styles.largeBox}>
@@ -120,6 +162,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'flex-start', // Align text to the start of the box
   },
+  anesBox:{
+    backgroundColor: 'lightpink',
+    borderRadius: 10,
+    padding: 20,
+    width: '90%', // Adjust the width as necessary
+    marginVertical: 10,
+    alignItems: 'flex-start', // Align text to the start of the box
+  },
   largeBox: {
     backgroundColor: 'lightsalmon',
     borderRadius: 10,
@@ -129,6 +179,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center', // Center content horizontally and vertically
     marginVertical: 10,
+  },
+  aneType: {
+    fontWeight: 'bold',
+    color: '#007bff',
   },
   title: {
     fontSize: 22,
