@@ -55,7 +55,9 @@ const DetailedOR = ({ route, navigation }) => {
       track.caseid === surgeryInfo.caseid && 
       track.tname.startsWith('Solar8000/HR')
     );
-
+      
+      // we fetch the vitals data from the vitalDB API
+      // this could be upgraded to Epic, for example
       const fetchDataForTrack = async (tid) => {
           try {
               const response = await fetch(`https://api.vitaldb.net/${tid}`);
@@ -71,7 +73,9 @@ const DetailedOR = ({ route, navigation }) => {
               console.error("Error fetching data from VitalDB:", error);
           }
       };
-  
+      
+      // make sure we got usable data, then grab the tid of the HR data
+      // which is a unique identifier
       if (accessibleTracks.length > 0) {
           const tidToFetch = accessibleTracks[0].tid;
           fetchDataForTrack(tidToFetch);
@@ -82,6 +86,7 @@ const DetailedOR = ({ route, navigation }) => {
       }
   }, [surgeryInfo]);
   
+  // for parsing
   const csvToJSON = (csv) => {
     const lines = csv.split('\n');
     const result = [];
@@ -101,22 +106,24 @@ const DetailedOR = ({ route, navigation }) => {
     return result;
   };
   
+  // now, we display and update the HR data
   useEffect(() => {
     if (heartRateData.length > 0) {
-        // Find the index of the starting point
+        // find the index of the starting point based on when the op started
         const startIndex = heartRateData.findIndex(d => parseFloat(d.Time) >= opStart);
         let index = startIndex;
 
+        // keep updating
         const intervalId = setInterval(() => {
             if (index < heartRateData.length) {
                 setCurrentHeartRate(heartRateData[index]["Solar8000/HR"]);
                 index++;
             } else {
-                clearInterval(intervalId); // Stop when data ends
+                clearInterval(intervalId); // stop when data ends
             }
-        }, 2000); // Update every 2 seconds
+        }, 2000); // update every 2 seconds
 
-        return () => clearInterval(intervalId); // Cleanup
+        return () => clearInterval(intervalId); // cleanup
     }
 }, [heartRateData, opStart]);
 
@@ -143,10 +150,10 @@ const DetailedOR = ({ route, navigation }) => {
 
         <View style={styles.anesBox}>
           <Text style={styles.detailText}>
-            Type of Anesthesia: <Text style={styles.aneType}>{surgeryInfo.ane_type}</Text>
+            Type of Anesthesia: <Text style={styles.vital}>{surgeryInfo.ane_type}</Text>
           </Text>
           <Text style={styles.detailText}>
-            Current Heart Rate: <Text style={styles.aneType}>{currentHeartRate}</Text>
+            Current Heart Rate: <Text style={styles.vital}>{currentHeartRate}</Text>
           </Text>
           <Text style={styles.detailText}>Current Blood Pressure: not implemented</Text>
 
@@ -199,7 +206,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center content horizontally and vertically
     marginVertical: 10,
   },
-  aneType: {
+  vital: {
     fontWeight: 'bold',
     color: '#007bff',
   },
