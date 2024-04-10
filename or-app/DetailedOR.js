@@ -42,41 +42,45 @@ const DetailedOR = ({ route, navigation }) => {
 
   // grab surgery info from the case we picked
   // right now, it's a random case ID choice
-  const [surgeryInfo] = useState(selectRandomCase(casesData));
+  const [surgeryInfo, setSurgeryInfo] = useState(selectRandomCase(casesData));
   const opStart = surgeryInfo.opstart
 
-  // grab the info about which machines we recorded from
-  const [tracksForCase, setTracksForCase] = useState([]);
-  const accessibleMachines = Array.from(new Set(
-    tracksForCase.map(item => item.tname)
-      .filter(tname => tname.startsWith('Solar8000/HR')) // just heart rate
-  ));
-  console.log(accessibleMachines)
+  // heart rate stuff
+  const [currentHeartRate, setCurrentHeartRate] = useState(null);
+  const [heartRateData, setHeartRateData] = useState([]);
 
-  const [selectedTrack, setSelectedTrack] = useState(null);
-
+  // when we open, we filter the tracks to only HR from our current patient
   useEffect(() => {
-    // only get tracks for the selected case and tracks (HR only for now)
-    const filteredTracks = filterTracksByCaseId(tracksData, surgeryInfo.caseid, accessibleMachines);
-    setTracksForCase(filteredTracks);
-  }, [surgeryInfo]);
+    const accessibleTracks = tracksData.filter(track => 
+      track.caseid === surgeryInfo.caseid && 
+      track.tname.startsWith('Solar8000/HR')
+    );
 
-  const fetchDataForTrack = async (tid) => {
-    try {
-      const response = await fetch(`https://api.vitaldb.net/${tid}`);
-      console.log(`https://api.vitaldb.net/${tid}`)
-      if (response.ok) {
-        const csvText = await response.text();
-        const data = csvToJSON(csvText);
-        console.log('Data Received')
-        console.log(data)
-      } else {
-        throw new Error('Response not successful');
+      const fetchDataForTrack = async (tid) => {
+          try {
+              const response = await fetch(`https://api.vitaldb.net/${tid}`);
+              if (response.ok) {
+                  const csvText = await response.text();
+                  const data = csvToJSON(csvText);
+                  // Assuming data is sorted by Time
+                  setHeartRateData(data);
+              } else {
+                  throw new Error('Response not successful');
+              }
+          } catch (error) {
+              console.error("Error fetching data from VitalDB:", error);
+          }
+      };
+  
+      if (accessibleTracks.length > 0) {
+          const tidToFetch = accessibleTracks[0].tid;
+          fetchDataForTrack(tidToFetch);
       }
-    } catch (error) {
-      console.error("Error fetching data from VitalDB:", error);
-    }
-  };
+  
+      return () => {
+          // Cleanup: Clear interval if set
+      }
+  }, [surgeryInfo]);
   
   const csvToJSON = (csv) => {
     const lines = csv.split('\n');
@@ -97,6 +101,24 @@ const DetailedOR = ({ route, navigation }) => {
     return result;
   };
   
+  useEffect(() => {
+    if (heartRateData.length > 0) {
+        // Find the index of the starting point
+        const startIndex = heartRateData.findIndex(d => parseFloat(d.Time) >= opStart);
+        let index = startIndex;
+
+        const intervalId = setInterval(() => {
+            if (index < heartRateData.length) {
+                setCurrentHeartRate(heartRateData[index]["Solar8000/HR"]);
+                index++;
+            } else {
+                clearInterval(intervalId); // Stop when data ends
+            }
+        }, 2000); // Update every 2 seconds
+
+        return () => clearInterval(intervalId); // Cleanup
+    }
+}, [heartRateData, opStart]);
 
   // Handle track selection
   const handleTrackSelect = (tid) => {
@@ -120,16 +142,13 @@ const DetailedOR = ({ route, navigation }) => {
         </View>
 
         <View style={styles.anesBox}>
-          {/* <RNPickerSelect
-            onValueChange={(value) => handleTrackSelect(value)}
-            items={tracksForCase.map((track) => ({ label: track.tname, value: track.tid }))}
-            placeholder={{ label: 'Select a track...', value: null }}
-          /> */}
           <Text style={styles.detailText}>
             Type of Anesthesia: <Text style={styles.aneType}>{surgeryInfo.ane_type}</Text>
           </Text>
-          <Text style={styles.detailText}>Current Heart Rate: {surgeryInfo.ane_type}</Text>
-          <Text style={styles.detailText}>Current Blood Pressure: {surgeryInfo.ane_type}</Text>
+          <Text style={styles.detailText}>
+            Current Heart Rate: <Text style={styles.aneType}>{currentHeartRate}</Text>
+          </Text>
+          <Text style={styles.detailText}>Current Blood Pressure: not implemented</Text>
 
         </View>
 
