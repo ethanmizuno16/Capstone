@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 import casesData from './cases_filtered_json.json';
 import tracksData from './tracks_info_filtered_json.json';
 
@@ -198,9 +198,12 @@ const DetailedOR = ({ route, navigation }) => {
                     </Text>
                 </View>
 
-                <View style={styles.largeBox}>
-                    <Text style={styles.boxContent}>Messaging</Text>
-                </View>
+                <TouchableOpacity 
+          style={styles.largeBox}
+          onPress={() => navigation.navigate('PushNotifications', { or: or })}
+        >
+          <Text style={styles.boxTitle}>Messaging</Text>
+        </TouchableOpacity>
 
                 <Button title="Go Back" onPress={() => navigation.goBack()} />
             </View>
