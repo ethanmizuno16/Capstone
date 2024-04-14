@@ -10,16 +10,6 @@ const selectRandomCase = (cases) => {
     return cases[randomIndex];
 };
 
-// filter tracks by case ID and ensure the tnames are the ones we want
-const filterTracksByCaseId = (tracks, caseId, accessibleMachines) => {
-    return tracks.filter(track =>
-        track.caseid === caseId &&
-        (accessibleMachines.includes(track.tname))
-    );
-};
-
-
-
 const DetailedOR = ({ route, navigation }) => {
     const { or } = route.params;
 
@@ -32,23 +22,40 @@ const DetailedOR = ({ route, navigation }) => {
     const [currentHeartRate, setCurrentHeartRate] = useState(null);
     const [heartRateData, setHeartRateData] = useState([]);
 
-    // when we open, we filter the tracks to only HR from our current patient
+    // blood pressure stuff
+    const [currentSBP, setCurrentSBP] = useState(null);
+    const [sbpData, setSBPData] = useState([]);
+
+    // blood pressure stuff
+    const [currentDBP, setCurrentDBP] = useState(null);
+    const [dbpData, setDBPData] = useState([]);
+
+    // when we open, we filter the tracks to only certain machines from our current patient
     useEffect(() => {
-        const accessibleTracks = tracksData.filter(track =>
+        const heartRateTrack = tracksData.filter(track =>
             track.caseid === surgeryInfo.caseid &&
             track.tname.startsWith('Solar8000/HR')
         );
 
+        const systolicPressureTrack = tracksData.filter(track =>
+            track.caseid === surgeryInfo.caseid &&
+            track.tname.startsWith('Solar8000/ART_SBP')
+        );
+
+        const diastolicPressureTrack = tracksData.filter(track =>
+            track.caseid === surgeryInfo.caseid &&
+            track.tname.startsWith('Solar8000/ART_DBP')
+        );
+
         // we fetch the vitals data from the vitalDB API
         // this could be upgraded to Epic, for example
-        const fetchDataForTrack = async (tid) => {
+        const fetchDataForTrack = async (tid, setData) => {
             try {
                 const response = await fetch(`https://api.vitaldb.net/${tid}`);
                 if (response.ok) {
                     const csvText = await response.text();
                     const data = csvToJSON(csvText);
-                    // Assuming data is sorted by Time
-                    setHeartRateData(data);
+                    setData(data);
                 } else {
                     throw new Error('Response not successful');
                 }
@@ -59,9 +66,19 @@ const DetailedOR = ({ route, navigation }) => {
 
         // make sure we got usable data, then grab the tid of the HR data
         // which is a unique identifier
-        if (accessibleTracks.length > 0) {
-            const tidToFetch = accessibleTracks[0].tid;
-            fetchDataForTrack(tidToFetch);
+        if (heartRateTrack.length > 0) {
+            const heartRateTID = heartRateTrack[0].tid;
+            fetchDataForTrack(heartRateTID, setHeartRateData);
+        }
+
+        if (systolicPressureTrack.length > 0) {
+            const systolicPressureTID = systolicPressureTrack[0].tid;
+            fetchDataForTrack(systolicPressureTID, setSBPData);
+        }
+
+        if (diastolicPressureTrack.length > 0) {
+            const diastolicPressureTID = diastolicPressureTrack[0].tid;
+            fetchDataForTrack(diastolicPressureTID, setDBPData);
         }
 
         return () => {
@@ -110,6 +127,45 @@ const DetailedOR = ({ route, navigation }) => {
         }
     }, [heartRateData, opStart]);
 
+    // SBP instead of HR
+    useEffect(() => {
+        if (sbpData.length > 0) {
+            const startIndex = sbpData.findIndex(d => parseFloat(d.Time) >= opStart);
+            let index = startIndex;
+
+            const intervalId = setInterval(() => {
+                if (index < sbpData.length) {
+                    setCurrentSBP(sbpData[index]["Solar8000/ART_SBP"]);
+                    index++;
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 2000);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [sbpData, opStart]);
+
+
+    // DBP instead of HR
+    useEffect(() => {
+        if (dbpData.length > 0) {
+            const startIndex = dbpData.findIndex(d => parseFloat(d.Time) >= opStart);
+            let index = startIndex;
+
+            const intervalId = setInterval(() => {
+                if (index < dbpData.length) {
+                    setCurrentDBP(dbpData[index]["Solar8000/ART_DBP"]);
+                    index++;
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 2000);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [dbpData, opStart]);
+
     // Handle track selection
     const handleTrackSelect = (tid) => {
         setSelectedTrack(tid);
@@ -134,8 +190,12 @@ const DetailedOR = ({ route, navigation }) => {
                     <Text style={styles.detailText}>
                         Current Heart Rate: <Text style={styles.vital}>{currentHeartRate}</Text>
                     </Text>
-                    <Text style={styles.detailText}>Current Blood Pressure: not implemented</Text>
-
+                    <Text style={styles.detailText}>
+                        Current Blood Pressure:{" "}
+                        <Text style={styles.vital}>
+                            {currentSBP && currentDBP ? `${currentSBP}/${currentDBP}` : currentSBP || currentDBP || ''}
+                        </Text>
+                    </Text>
                 </View>
 
                 <View style={styles.largeBox}>
@@ -186,7 +246,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightpink',
         borderRadius: 10,
         padding: 20,
-        width: '90%', 
+        width: '90%',
         marginVertical: 10,
         alignItems: 'flex-start',
     },
