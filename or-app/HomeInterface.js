@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import surgeries from './surgeries.json'; // Make sure this is the correct path to your JSON file
 
 const orData = [
   {
@@ -50,6 +51,17 @@ const { width } = Dimensions.get('window');
 const cardWidth = width * 0.9;
 
 const HomeInterface = ({ navigation }) => {
+  
+  const getCurrentStepFraction = (surgeryType, currentStep) => {
+    const surgery = surgeries.find(s => s.surgeryType === surgeryType);
+    if (surgery) {
+      const totalSteps = surgery.steps.length;
+      const currentStepIndex = surgery.steps.indexOf(currentStep) + 1; // +1 for 1-based index
+      return `${currentStepIndex}/${totalSteps}`; // e.g., "1/8"
+    }
+    return '0/0'; // Default if not found
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -62,7 +74,10 @@ const HomeInterface = ({ navigation }) => {
             <Text style={styles.cardTitle}>{item.id}: {item.surgeryType}</Text>
             <Text style={styles.cardContent}>Surgeon: {item.surgeonName}</Text>
             <Text style={styles.cardContent}>R.A.: {item.raName}</Text>
-            <Text style={styles.cardContent}>Stage: {item.surgeryStage}</Text>
+            {/* Updated line: Stage and Step Fraction */}
+            <Text style={styles.cardContent}>
+              Stage: {item.surgeryStage} ({getCurrentStepFraction(item.surgeryType, item.surgeryStage)})
+            </Text>
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
