@@ -13,6 +13,12 @@ const PushNotificationsScreen = ({ route }) => {
     // Your notification logic here
   };
 
+  const handleEmergencyAlert = () => {
+    console.log("Emergency in OR triggered!");
+    // Your emergency handling logic here
+  };
+
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
@@ -36,6 +42,13 @@ const PushNotificationsScreen = ({ route }) => {
             </TouchableOpacity>
           </View>
         ))}
+
+        <TouchableOpacity
+          style={styles.emergencyButton}
+          onPress={handleEmergencyAlert}
+        >
+          <Text style={styles.emergencyButtonText}>Emergency in OR</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -98,7 +111,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'blue',
   },
-  // Add other styles as needed
+  emergencyButton: {
+    backgroundColor: 'red',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 20,
+    marginBottom: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emergencyButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
 });
 
 export default PushNotificationsScreen;
