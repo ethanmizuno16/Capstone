@@ -15,15 +15,17 @@ const selectRandomCase = (cases) => {
 const DetailedOR = ({ route, navigation }) => {
     const { or } = route.params;
 
-    const getCurrentStepFraction = (surgeryType, currentStep) => {
+    // Function to get the completion percentage of the current surgery step
+    const getCompletionPercentage = (surgeryType, currentStep) => {
         const surgery = surgeries.find(s => s.surgeryType === surgeryType);
         if (surgery) {
-          const totalSteps = surgery.steps.length;
-          const currentStepIndex = surgery.steps.indexOf(currentStep) + 1; // +1 for 1-based index
-          return `(${currentStepIndex}/${totalSteps})`; // e.g., "(1/8)"
+            const totalSteps = surgery.steps.length;
+            const currentStepIndex = surgery.steps.indexOf(currentStep) + 1; // +1 for 1-based index
+            const percentage = (currentStepIndex / totalSteps) * 100; // Calculate the percentage
+            return `${percentage.toFixed(0)}% Complete`; // Convert to a string with 0 decimal places and append 'Complete'
         }
-        return '(0/0)'; // Default if not found
-      };
+        return '0% Complete'; // Default if not found
+    };
 
     // grab surgery info from the case we picked
     // right now, it's a random case ID choice
@@ -187,14 +189,13 @@ const DetailedOR = ({ route, navigation }) => {
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
-                <View style={styles.detailBox}>
+            <View style={styles.detailBox}>
                     <Text style={styles.title}>{or.id}</Text>
                     <Text style={styles.detailText}>Surgeon Name: {or.surgeonName}</Text>
                     <Text style={styles.detailText}>R.A. Name: {or.raName}</Text>
                     <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
-                    <Text style={styles.detailText}>
-                        Surgery Stage: {or.surgeryStage} {getCurrentStepFraction(or.surgeryType, or.surgeryStage)}
-                    </Text>
+                    <Text style={styles.detailText}>Surgery Stage: {or.surgeryStage}</Text>
+                    <Text style={styles.detailText}>Surgery Progression: {getCompletionPercentage(or.surgeryType, or.surgeryStage)}</Text>
                 </View>
 
                 <View style={styles.anesBox}>

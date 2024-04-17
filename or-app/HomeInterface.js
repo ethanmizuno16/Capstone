@@ -52,14 +52,16 @@ const cardWidth = width * 0.9;
 
 const HomeInterface = ({ navigation }) => {
   
-  const getCurrentStepFraction = (surgeryType, currentStep) => {
+  // Function to calculate the completion percentage of the current surgery step
+  const getCompletionPercentage = (surgeryType, currentStep) => {
     const surgery = surgeries.find(s => s.surgeryType === surgeryType);
     if (surgery) {
       const totalSteps = surgery.steps.length;
       const currentStepIndex = surgery.steps.indexOf(currentStep) + 1; // +1 for 1-based index
-      return `${currentStepIndex}/${totalSteps}`; // e.g., "1/8"
+      const percentage = (currentStepIndex / totalSteps) * 100; // Calculate the percentage
+      return `${percentage.toFixed(0)}% Complete`; // Convert to a string with 0 decimal places and append 'Complete'
     }
-    return '0/0'; // Default if not found
+    return '0% Complete'; // Default if not found, also append 'Complete'
   };
 
   return (
@@ -74,9 +76,12 @@ const HomeInterface = ({ navigation }) => {
             <Text style={styles.cardTitle}>{item.id}: {item.surgeryType}</Text>
             <Text style={styles.cardContent}>Surgeon: {item.surgeonName}</Text>
             <Text style={styles.cardContent}>R.A.: {item.raName}</Text>
-            {/* Updated line: Stage and Step Fraction */}
             <Text style={styles.cardContent}>
-              Stage: {item.surgeryStage} ({getCurrentStepFraction(item.surgeryType, item.surgeryStage)})
+              Stage: {item.surgeryStage}
+            </Text>
+            {/* Updated line for Surgery Progression with 'Complete' */}
+            <Text style={styles.cardContent}>
+              Surgery Progression: {getCompletionPercentage(item.surgeryType, item.surgeryStage)}
             </Text>
           </TouchableOpacity>
         )}
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
   cardContent: {
     fontSize: 16,
     color: '#666',
+    marginBottom: 5, // Ensure space between lines for readability
   },
   contentContainer: {
     paddingTop: 20,
