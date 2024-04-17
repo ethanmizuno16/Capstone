@@ -1,23 +1,28 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import surgeriesData from './surgeries.json';
 
 const PushNotificationsScreen = ({ route }) => {
   const { or } = route.params;
   const surgery = surgeriesData.find(surgery => surgery.surgeryType === or.surgeryType);
   const steps = surgery ? surgery.steps : [];
-  const currentStepIndex = steps.indexOf(or.surgeryStage);
+  const [completed, setCompleted] = useState(steps.map(() => false));
 
-  const handleSendNotification = (step) => {
-    console.log(`Sending notification for step: ${step}`);
-    // Your notification logic here
+  // Animated values for each step
+  const animations = useRef(steps.map(() => new Animated.Value(0))).current;
+
+  const toggleStep = (index) => {
+    let newCompleted = [...completed];
+    newCompleted[index] = !newCompleted[index];
+    setCompleted(newCompleted);
+
+    // Start the animation
+    Animated.timing(animations[index], {
+      toValue: newCompleted[index] ? 1 : 0,
+      duration: 300,
+      useNativeDriver: false
+    }).start();
   };
-
-  const handleEmergencyAlert = () => {
-    console.log("Emergency in OR triggered!");
-    // Your emergency handling logic here
-  };
-
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -25,27 +30,41 @@ const PushNotificationsScreen = ({ route }) => {
         <Text style={styles.header}>{or.surgeryType}</Text>
         <Text style={styles.subHeader}>{or.id}</Text>
         <Text style={styles.subHeader}>{or.surgeonName}</Text>
+        <Text style={styles.notificationHeader}>Push Notification</Text> 
 
         {steps.map((step, index) => (
           <View key={index} style={styles.stepContainer}>
-            <Text style={[
+            <Animated.Text style={[
               styles.stepText,
-              index <= currentStepIndex ? styles.shadedStep : {}
+              {
+                backgroundColor: animations[index].interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['lightgreen', '#cccccc']
+                })
+              }
             ]}>
               {step}
-            </Text>
+            </Animated.Text>
             <TouchableOpacity
               style={styles.notificationButton}
-              onPress={() => handleSendNotification(step)}
+              onPress={() => toggleStep(index)}
             >
-              <View style={styles.notificationButtonInner} />
+              <Animated.View style={[
+                styles.checkboxInner,
+                {
+                  backgroundColor: animations[index].interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['transparent', 'blue']
+                  })
+                }
+              ]} />
             </TouchableOpacity>
           </View>
         ))}
 
         <TouchableOpacity
           style={styles.emergencyButton}
-          onPress={handleEmergencyAlert}
+          onPress={() => console.log("Emergency in OR triggered!")}
         >
           <Text style={styles.emergencyButtonText}>Emergency in OR</Text>
         </TouchableOpacity>
@@ -72,44 +91,39 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 5,
   },
+  notificationHeader: {
+    textAlign: 'right',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginTop: 10,
+    marginBottom: 10,
+  },
   stepContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  stepTextContainer: {
-    flex: 1,
-    marginRight: 10,
   },
   stepText: {
-    backgroundColor: 'lightgreen',
+    flex: 0.8,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
-    textAlign: 'left', // Align text to the left
-    flex: 0.8, // Take up 80% of the container width
     marginRight: 10,
   },
-  shadedStep: {
-    backgroundColor: '#cccccc', // Grey out the completed steps
-  },
   notificationButton: {
-    flex: 0.2, // Take up the remaining 20% of the container width
-    width: 30, // Keep the button size consistent
+    width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#add8e6', // Light blue color
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 0,
+    borderWidth: 2,
+    borderColor: '#add8e6',
   },
-  notificationButtonInner: {
+  checkboxInner: {
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: 'blue',
   },
   emergencyButton: {
     backgroundColor: 'red',
@@ -126,7 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-
 });
 
 export default PushNotificationsScreen;
