@@ -1,14 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
-import surgeriesData from './surgeries.json';
+import { useSurgery } from './SurgeryContext'; // Import the useSurgery context
 
-const PushNotificationsScreen = ({ route }) => {
+const PushNotificationsScreen = ({ route, navigation }) => {
   const { or } = route.params;
-  const surgery = surgeriesData.find(surgery => surgery.surgeryType === or.surgeryType);
-  const steps = surgery ? surgery.steps : [];
+  const { getSurgerySteps, updateSurgeryStage } = useSurgery(); // Get functions from context
+  const steps = getSurgerySteps(or.surgeryType); // Fetch steps for the specific surgery type
   const [completed, setCompleted] = useState(steps.map(() => false));
 
-  // Animated values for each step
   const animations = useRef(steps.map(() => new Animated.Value(0))).current;
 
   const toggleStep = (index) => {
@@ -16,12 +15,15 @@ const PushNotificationsScreen = ({ route }) => {
     newCompleted[index] = !newCompleted[index];
     setCompleted(newCompleted);
 
-    // Start the animation
     Animated.timing(animations[index], {
       toValue: newCompleted[index] ? 1 : 0,
       duration: 300,
       useNativeDriver: false
     }).start();
+
+    if (newCompleted[index]) {
+      updateSurgeryStage(or.id, steps[index]); // Update the surgery stage in context
+    }
   };
 
   return (
@@ -30,7 +32,7 @@ const PushNotificationsScreen = ({ route }) => {
         <Text style={styles.header}>{or.surgeryType}</Text>
         <Text style={styles.subHeader}>{or.id}</Text>
         <Text style={styles.subHeader}>{or.surgeonName}</Text>
-        <Text style={styles.notificationHeader}>Push Notification</Text> 
+        <Text style={styles.notificationHeader}>Push Notification</Text>
 
         {steps.map((step, index) => (
           <View key={index} style={styles.stepContainer}>

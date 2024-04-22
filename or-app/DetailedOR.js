@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 import casesData from './cases_filtered_json.json';
 import tracksData from './tracks_info_filtered_json.json';
-import surgeries from './surgeries.json'; // Import the surgery steps data
+import surgeries from './surgeries.json'; // Import the surgery steps 
+import { useSurgery } from './SurgeryContext';
 
 
 
@@ -14,6 +15,9 @@ const selectRandomCase = (cases) => {
 
 const DetailedOR = ({ route, navigation }) => {
     const { or } = route.params;
+    const { getSurgerySteps, updateSurgeryStage } = useSurgery(); // Use the context
+    const steps = getSurgerySteps(or.surgeryType); // Get steps from context
+    const currentStepIndex = steps.indexOf(or.surgeryStage);
 
     // Function to get the completion percentage of the current surgery step
     const getCompletionPercentage = (surgeryType, currentStep) => {
