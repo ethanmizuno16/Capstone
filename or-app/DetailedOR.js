@@ -14,8 +14,14 @@ const selectRandomCase = (cases) => {
 };
 
 const DetailedOR = ({ route, navigation }) => {
-    const { or } = route.params;
-    const { getSurgerySteps, updateSurgeryStage } = useSurgery(); // Use the context
+    const { orId } = route.params;
+    const { orData, getSurgerySteps } = useSurgery(); // Use the context
+    const or = orData.find(o => o.id === orId);
+
+    if (!or) {
+        return <Text>No data available for this OR.</Text>;
+    }
+
     const steps = getSurgerySteps(or.surgeryType); // Get steps from context
     const currentStepIndex = steps.indexOf(or.surgeryStage);
 
