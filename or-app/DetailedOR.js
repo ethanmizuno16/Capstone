@@ -42,6 +42,15 @@ const DetailedOR = ({ route, navigation }) => {
     const [surgeryInfo, setSurgeryInfo] = useState(selectRandomCase(casesData));
     const opStart = surgeryInfo.opstart
 
+    const [operationStartTime, setOperationStartTime] = useState('');
+    useEffect(() => {
+        const opStart = surgeryInfo.opstart;
+        const currentTime = new Date();
+        const opStartDate = new Date(currentTime.getTime() - opStart * 1000);
+        const opStartString = opStartDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        setOperationStartTime(opStartString);
+      }, [surgeryInfo.opstart]);
+
     // heart rate stuff
     const [currentHeartRate, setCurrentHeartRate] = useState(null);
     const [heartRateData, setHeartRateData] = useState([]);
@@ -206,6 +215,7 @@ const DetailedOR = ({ route, navigation }) => {
                     <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
                     <Text style={styles.detailText}>Surgery Stage: {or.surgeryStage}</Text>
                     <Text style={styles.detailText}>Surgery Progression: {getCompletionPercentage(or.surgeryType, or.surgeryStage)}</Text>
+                    <Text style={styles.detailText}>Operation Start Time: {operationStartTime}</Text>
                 </View>
 
                 <View style={styles.anesBox}>
