@@ -6,9 +6,11 @@ const PushNotificationsScreen = ({ route, navigation }) => {
   const { or } = route.params;
   const { getSurgerySteps, updateSurgeryStage } = useSurgery(); // Get functions from context
   const steps = getSurgerySteps(or.surgeryType); // Fetch steps for the specific surgery type
-  const [completed, setCompleted] = useState(steps.map(() => false));
 
-  const animations = useRef(steps.map(() => new Animated.Value(0))).current;
+  const currentStageIndex = steps.findIndex(step => step === or.surgeryStage);
+  const [completed, setCompleted] = useState(steps.map((_, index) => index <= currentStageIndex));
+
+  const animations = useRef(steps.map((_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0))).current;
 
   const toggleStep = (index) => {
     let newCompleted = [...completed];

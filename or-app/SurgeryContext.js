@@ -7,14 +7,19 @@ export const useSurgery = () => useContext(SurgeryContext);
 
 export const SurgeryProvider = ({ children }) => {
   // Including OR data in state
-  const [orData, setOrData] = useState([
-    { id: 'OR 1', surgeonName: 'Dr. Smith', raName: 'Dr. Johnson', surgeryType: 'Open Appendectomy', surgeryStage: 'Intubation' },
-    { id: 'OR 2', surgeonName: 'Dr. Jones', raName: 'Dr. Williams', surgeryType: 'Single Lung Transplant', surgeryStage: 'Lung Exposure' },
-    { id: 'OR 3', surgeonName: 'Dr. Vogel', raName: 'Dr. Neils', surgeryType: 'Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)', surgeryStage: 'Spine exposure' },
-    { id: 'OR 4', surgeonName: 'Dr. Lee', raName: 'Dr. Kim', surgeryType: 'Cesarean Section', surgeryStage: 'Suctioning of Amniotic Fluids' },
-    { id: 'OR 5', surgeonName: 'Dr. Gomez', raName: 'Dr. Santos', surgeryType: 'Herniorrhaphy (Repair)', surgeryStage: 'Hernia isolation' },
-    { id: 'OR 6', surgeonName: 'Dr. Patel', raName: 'Dr. Murray', surgeryType: 'Herniorrhaphy (Removal)', surgeryStage: 'Initial incision' },
-  ]);
+  const initialOrData =[
+    { id: 'OR 1', surgeonName: 'Dr. Smith', raName: 'Dr. Johnson', surgeryType: 'Open Appendectomy'},
+    { id: 'OR 2', surgeonName: 'Dr. Jones', raName: 'Dr. Williams', surgeryType: 'Single Lung Transplant'},
+    { id: 'OR 3', surgeonName: 'Dr. Vogel', raName: 'Dr. Neils', surgeryType: 'Spinal Fusion: Anterior Lumbar Interbody Fusion (ALIF)'},
+    { id: 'OR 4', surgeonName: 'Dr. Lee', raName: 'Dr. Kim', surgeryType: 'Cesarean Section'},
+    { id: 'OR 5', surgeonName: 'Dr. Gomez', raName: 'Dr. Santos', surgeryType: 'Herniorrhaphy (Repair)'},
+    { id: 'OR 6', surgeonName: 'Dr. Patel', raName: 'Dr. Murray', surgeryType: 'Herniorrhaphy (Removal)'},
+  ].map(or => ({
+    ...or,
+    surgeryStage: surgeriesData.find(surgery => surgery.surgeryType === or.surgeryType)?.steps[0] // Set to first step
+}))
+
+  const [orData, setOrData] = useState(initialOrData);
 
   // Function to get surgery steps by type
   const getSurgerySteps = (surgeryType) => {

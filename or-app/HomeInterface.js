@@ -23,7 +23,7 @@ const HomeInterface = ({ navigation }) => {
         renderItem={({ item }) => (
           <TouchableOpacity 
             style={styles.card} 
-            onPress={() => navigation.navigate('DetailedOR', { or: item })}
+            onPress={() => navigation.navigate('DetailedOR', { orId: item.id })}
           >
             <Text style={styles.cardTitle}>{item.id}: {item.surgeryType}</Text>
             <Text style={styles.cardContent}>Surgeon: {item.surgeonName}</Text>
