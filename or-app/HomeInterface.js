@@ -11,10 +11,10 @@ const HomeInterface = ({ navigation }) => {
   // Function to calculate the completion percentage of the current surgery step
   const getCompletionPercentage = (surgeryType, currentStep) => {
     const steps = getSurgerySteps(surgeryType);  // Fetch steps from context
-    const currentStepIndex = steps.indexOf(currentStep) + 1;  // Find the current step index
-    const percentage = (currentStepIndex / steps.length) * 100;
-    return `${percentage.toFixed(0)}% Complete`;  // Calculate percentage and format it
-  };
+    const currentStepIndex = steps.indexOf(currentStep);  // Find the current step index
+    const percentage = ((currentStepIndex + 1) / steps.length) * 100;  // Calculate percentage
+    return `${percentage.toFixed(0)}% Complete (Stage ${currentStepIndex + 1}/${steps.length})`;  // Format with "Stage" before fraction
+  };  
 
   return (
     <View style={styles.container}>
@@ -30,8 +30,9 @@ const HomeInterface = ({ navigation }) => {
             <Text style={styles.cardContent}>R.A.: {item.raName}</Text>
             <Text style={styles.cardContent}>Stage: {item.surgeryStage}</Text>
             <Text style={styles.cardContent}>
-              Surgery Progression: {getCompletionPercentage(item.surgeryType, item.surgeryStage)}
+            Surgery Progression: {getCompletionPercentage(item.surgeryType, item.surgeryStage)}
             </Text>
+
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
