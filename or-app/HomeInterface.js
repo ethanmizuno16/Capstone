@@ -27,7 +27,7 @@ const HomeInterface = ({ navigation }) => {
           >
             <Text style={styles.cardTitle}>{item.id}: {item.surgeryType}</Text>
             <Text style={styles.cardContent}>Surgeon: {item.surgeonName}</Text>
-            <Text style={styles.cardContent}>R.A.: {item.raName}</Text>
+            <Text style={styles.cardContent}>Anesthesiologist: {item.raName}</Text>
             <Text style={styles.cardContent}>Stage: {item.surgeryStage}</Text>
             <Text style={styles.cardContent}>
             Surgery Progression: {getCompletionPercentage(item.surgeryType, item.surgeryStage)}

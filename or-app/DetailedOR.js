@@ -32,7 +32,7 @@ const DetailedOR = ({ route, navigation }) => {
             const totalSteps = surgery.steps.length;
             const currentStepIndex = surgery.steps.indexOf(currentStep) + 1; // +1 for 1-based index
             const percentage = (currentStepIndex / totalSteps) * 100; // Calculate the percentage
-            return `${percentage.toFixed(0)}% Complete`; // Convert to a string with 0 decimal places and append 'Complete'
+            return `${percentage.toFixed(0)}% Complete (Stage ${currentStepIndex}/${totalSteps})`; // Convert to a string with "Stage" before fraction
         }
         return '0% Complete'; // Default if not found
     };
@@ -211,7 +211,7 @@ const DetailedOR = ({ route, navigation }) => {
             <View style={styles.detailBox}>
                     <Text style={styles.title}>{or.id}</Text>
                     <Text style={styles.detailText}>Surgeon Name: {or.surgeonName}</Text>
-                    <Text style={styles.detailText}>R.A. Name: {or.raName}</Text>
+                    <Text style={styles.detailText}>Anesthesiologist: {or.raName}</Text>
                     <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
                     <Text style={styles.detailText}>Surgery Stage: {or.surgeryStage}</Text>
                     <Text style={styles.detailText}>Surgery Progression: {getCompletionPercentage(or.surgeryType, or.surgeryStage)}</Text>
