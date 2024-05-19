@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "or-app",
-    "slug": "or-app",
+    "name": "or-app-updated",
+    "slug": "or-app-updated",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,7 +28,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "7ccdcc8c-4ee1-4b3a-a870-f38649e43919"
+        "projectId": "29bd4e6a-8eac-4278-ba1b-6b2ccf83e689"
       }
     },
     "owner": "or-app"
