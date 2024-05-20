@@ -1,5 +1,3 @@
-import React from 'react';
-// notifications.js
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import * as Device from 'expo-device';
@@ -23,14 +21,14 @@ export async function registerForPushNotificationsAsync(setExpoPushToken) {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      Alert.alert('Failed to get push token for push notification!');
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(token);
 
     // Send the token to your backend server
-    await fetch('http://10.18.175.238:3000/store-push-token', {
+    await fetch('http://10.18.57.136:3000/store-push-token', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -43,7 +41,7 @@ export async function registerForPushNotificationsAsync(setExpoPushToken) {
 
     setExpoPushToken(token); // Save the token
   } else {
-    alert('Must use physical device for Push Notifications');
+    Alert.alert('Must use physical device for Push Notifications');
   }
 
   if (Platform.OS === 'android') {
@@ -54,30 +52,4 @@ export async function registerForPushNotificationsAsync(setExpoPushToken) {
       lightColor: '#FF231F7C',
     });
   }
-}
-
-export function configureNotifications(setExpoPushToken) {
-  const notificationListener = React.useRef();
-  const responseListener = React.useRef();
-
-  React.useEffect(() => {
-    registerForPushNotificationsAsync(setExpoPushToken).then(token => {
-      console.log(token);
-    });
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      Alert.alert('Notification Received', JSON.stringify(notification));
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
 }
