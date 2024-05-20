@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import casesData from './cases_filtered_json.json';
 import tracksData from './tracks_info_filtered_json.json';
 import surgeries from './surgeries.json'; // Import the surgery steps 
 import { useSurgery } from './SurgeryContext';
-
-
+import { LineChart } from 'react-native-chart-kit';
 
 // select a random case
 const selectRandomCase = (cases) => {
@@ -49,7 +48,7 @@ const DetailedOR = ({ route, navigation }) => {
         const opStartDate = new Date(currentTime.getTime() - opStart * 1000);
         const opStartString = opStartDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         setOperationStartTime(opStartString);
-      }, [surgeryInfo.opstart]);
+    }, [surgeryInfo.opstart]);
 
     // heart rate stuff
     const [currentHeartRate, setCurrentHeartRate] = useState(null);
@@ -62,6 +61,10 @@ const DetailedOR = ({ route, navigation }) => {
     // blood pressure stuff
     const [currentDBP, setCurrentDBP] = useState(null);
     const [dbpData, setDBPData] = useState([]);
+
+    // loading
+    const [isLoading, setIsLoading] = useState(true);
+    const [chartData, setChartData] = useState([]);
 
     // when we open, we filter the tracks to only certain machines from our current patient
     useEffect(() => {
@@ -80,8 +83,7 @@ const DetailedOR = ({ route, navigation }) => {
             track.tname.startsWith('Solar8000/ART_DBP')
         );
 
-        // we fetch the vitals data from the vitalDB API
-        // this could be upgraded to Epic, for example
+        // Fetch data only once
         const fetchDataForTrack = async (tid, setData) => {
             try {
                 const response = await fetch(`https://api.vitaldb.net/${tid}`);
@@ -97,27 +99,36 @@ const DetailedOR = ({ route, navigation }) => {
             }
         };
 
-        // make sure we got usable data, then grab the tid of the HR data
-        // which is a unique identifier
-        if (heartRateTrack.length > 0) {
-            const heartRateTID = heartRateTrack[0].tid;
-            fetchDataForTrack(heartRateTID, setHeartRateData);
-        }
+        // Fetch data for each track
+        const fetchData = async () => {
+            setIsLoading(true); // Set loading to true when starting fetch
 
-        if (systolicPressureTrack.length > 0) {
-            const systolicPressureTID = systolicPressureTrack[0].tid;
-            fetchDataForTrack(systolicPressureTID, setSBPData);
-        }
+            try {
+                if (heartRateTrack.length > 0) {
+                    const heartRateTID = heartRateTrack[0].tid;
+                    await fetchDataForTrack(heartRateTID, setHeartRateData);
+                }
 
-        if (diastolicPressureTrack.length > 0) {
-            const diastolicPressureTID = diastolicPressureTrack[0].tid;
-            fetchDataForTrack(diastolicPressureTID, setDBPData);
-        }
+                if (systolicPressureTrack.length > 0) {
+                    const systolicPressureTID = systolicPressureTrack[0].tid;
+                    await fetchDataForTrack(systolicPressureTID, setSBPData);
+                }
 
-        return () => {
-            // Cleanup: Clear interval if set
-        }
-    }, [surgeryInfo]);
+                if (diastolicPressureTrack.length > 0) {
+                    const diastolicPressureTID = diastolicPressureTrack[0].tid;
+                    await fetchDataForTrack(diastolicPressureTID, setDBPData);
+                }
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+            } finally {
+                setIsLoading(false); // Set loading to false after all data is fetched and processed
+            }
+        };
+
+        fetchData();
+
+
+    }, [surgeryInfo.caseid]);
 
     // for parsing
     const csvToJSON = (csv) => {
@@ -179,7 +190,6 @@ const DetailedOR = ({ route, navigation }) => {
         }
     }, [sbpData, opStart]);
 
-
     // DBP instead of HR
     useEffect(() => {
         if (dbpData.length > 0) {
@@ -205,10 +215,61 @@ const DetailedOR = ({ route, navigation }) => {
         fetchDataForTrack(tid);
     };
 
+    // Add new heart rate to chartData
+    useEffect(() => {
+        if (currentHeartRate && !isNaN(currentHeartRate) && currentHeartRate > 1 && currentHeartRate < 200) {
+            console.log("Adding heart rate to chart data:", currentHeartRate); // Log the current heart rate
+            setChartData(prevData => {
+                const newData = [...prevData, parseFloat(currentHeartRate)];
+                console.log("New chart data:", newData); // Log the updated chart data
+                return newData.filter(val => !isNaN(val));
+            });
+        }
+    }, [currentHeartRate]);
+
+    const screenWidth = Dimensions.get('window').width;
+
+    const heartRateChartData = {
+        labels: chartData.map((_, index) => index.toString()), // labels
+        datasets: [
+            {
+                data: chartData.filter(val => !isNaN(val)), // Ensure all values are numbers
+            }
+        ]
+    };
+
+    const staticChartData = {
+        labels: ["1", "2", "3", "4", "5"],
+        datasets: [
+            {
+                data: [60, 65, 70, 75, 80], // Example data points
+            }
+        ]
+    };
+
+    const chartConfig = {
+        backgroundColor: '#e26a00',
+        backgroundGradientFrom: '#fb8c00',
+        backgroundGradientTo: '#ffa726',
+        decimalPlaces: 0,
+        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        style: {
+            borderRadius: 16
+        },
+        propsForDots: {
+            r: '6',
+            strokeWidth: '2',
+            stroke: '#ffa726'
+        },
+        yAxisLabel: '',
+        yAxisSuffix: ' BPM'
+    };
+
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
-            <View style={styles.detailBox}>
+                <View style={styles.detailBox}>
                     <Text style={styles.title}>{or.id}</Text>
                     <Text style={styles.detailText}>Surgeon Name: {or.surgeonName}</Text>
                     <Text style={styles.detailText}>Anesthesiologist: {or.raName}</Text>
@@ -233,20 +294,38 @@ const DetailedOR = ({ route, navigation }) => {
                     </Text>
                 </View>
 
-                <TouchableOpacity 
-          style={styles.largeBox}
-          onPress={() => navigation.navigate('PushNotifications', { or: or })}
-        >
-          <Text style={styles.boxTitle}>Messaging</Text>
-        </TouchableOpacity>
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                    <View style={styles.chartContainer}>
+                        <Text style={styles.chartTitle}>Current Patient HR</Text>
+                        <LineChart
+                            data={staticChartData}
+                            width={Dimensions.get('window').width * 0.9} // from react-native
+                            height={220}
+                            chartConfig={chartConfig}
+                            withVerticalLabels={true}
+                            withHorizontalLabels={true}
+                            bezier
+                            style={{
+                                borderRadius: 16
+                            }}
+                        />
+                        <Text style={styles.chartAxisXLabel}>Time</Text>
+                    </View>
+                )}
+                <TouchableOpacity
+                    style={styles.largeBox}
+                    onPress={() => navigation.navigate('PushNotifications', { or: or })}
+                >
+                    <Text style={styles.boxTitle}>Messaging</Text>
+                </TouchableOpacity>
 
                 <Button title="Go Back" onPress={() => navigation.goBack()} />
             </View>
         </ScrollView>
     );
 };
-
-
 
 const styles = StyleSheet.create({
     scrollView: {
@@ -297,7 +376,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
+    chartContainer: {
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    chartTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    chartAxisXLabel: {
+        fontSize: 16,
+        marginTop: 10,
+    }
 });
-
 
 export default DetailedOR;

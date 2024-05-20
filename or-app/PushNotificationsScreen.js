@@ -32,7 +32,7 @@ const PushNotificationsScreen = ({ route, navigation }) => {
   const sendPushNotification = async (orId, newStage, surgeryType) => {
     console.log(`Sending push notification for OR ${orId}, stage ${newStage}`);
     try {
-      const response = await fetch('http://10.18.57.136:3000/send-notification', { // Updated with your local IP address
+      const response = await fetch('http://10.19.249.228:3000/send-notification', { // Updated with your local IP address
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -54,7 +54,7 @@ const PushNotificationsScreen = ({ route, navigation }) => {
   const sendEmergencyNotification = async () => {
     console.log(`Sending emergency notification for OR ${or.id}`);
     try {
-      const response = await fetch('http://10.18.57.136:3000/send-notification', { // Updated with your local IP address
+      const response = await fetch('http://10.19.249.228:3000/send-notification', { // Updated with your local IP address
         method: 'POST',
         headers: {
           Accept: 'application/json',
