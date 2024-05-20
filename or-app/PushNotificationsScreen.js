@@ -25,7 +25,56 @@ const PushNotificationsScreen = ({ route, navigation }) => {
 
     if (newCompleted[index]) {
       updateSurgeryStage(or.id, steps[index]); // Update the surgery stage in context
+      sendPushNotification(or.id, steps[index], or.surgeryType); // Send push notification
     }
+  };
+
+  const sendPushNotification = async (orId, newStage, surgeryType) => {
+    console.log(`Sending push notification for OR ${orId}, stage ${newStage}`);
+    try {
+      const response = await fetch('http://10.18.175.238:3000/send-notification', { // Updated with your local IP address
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: 'Surgery Update',
+          body: `${orId} is now at ${newStage} stage.`,
+          data: { orId, newStage },
+          priority: 'normal',
+        }),
+      });
+      console.log('Notification sent:', response);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
+  const sendEmergencyNotification = async () => {
+    console.log(`Sending emergency notification for OR ${or.id}`);
+    try {
+      const response = await fetch('http://10.0.0.244:3000/send-notification', { // Updated with your local IP address
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: 'Emergency Alert!',
+          body: 'Emergency in the Operating Room!',
+          data: { orId: or.id },
+          priority: 'high',
+        }),
+      });
+      console.log('Emergency notification sent:', response);
+    } catch (error) {
+      console.error('Error sending emergency notification:', error);
+    }
+  };
+
+  const handleEmergencyAlert = () => {
+    sendEmergencyNotification(); // Send high-priority alert
   };
 
   return (
@@ -68,7 +117,7 @@ const PushNotificationsScreen = ({ route, navigation }) => {
 
         <TouchableOpacity
           style={styles.emergencyButton}
-          onPress={() => console.log("Emergency in OR triggered!")}
+          onPress={handleEmergencyAlert}
         >
           <Text style={styles.emergencyButtonText}>Emergency in OR</Text>
         </TouchableOpacity>
