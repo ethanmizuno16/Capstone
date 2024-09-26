@@ -1,6 +1,6 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { Expo } = require('expo-server-sdk');
+const express = require("express");
+const bodyParser = require("body-parser");
+const { Expo } = require("expo-server-sdk");
 
 // Create a new Expo SDK client
 const expo = new Expo();
@@ -19,16 +19,18 @@ const saveToken = (token) => {
   }
 };
 
-app.post('/store-push-token', (req, res) => {
+app.post("/store-push-token", (req, res) => {
   const { token } = req.body;
   console.log(`Received push token: ${token}`); // Log received token
   saveToken(token);
-  res.send('Token stored');
+  res.send("Token stored");
 });
 
-app.post('/send-notification', (req, res) => {
+app.post("/send-notification", (req, res) => {
   const { title, body, data, priority } = req.body;
-  console.log(`Sending notification with title: ${title}, body: ${body}, priority: ${priority}`); // Log notification details
+  console.log(
+    `Sending notification with title: ${title}, body: ${body}, priority: ${priority}`,
+  ); // Log notification details
 
   let notifications = [];
   for (let pushToken of savedPushTokens) {
@@ -39,7 +41,7 @@ app.post('/send-notification', (req, res) => {
 
     notifications.push({
       to: pushToken,
-      sound: 'default',
+      sound: "default",
       title,
       body,
       data,
@@ -61,7 +63,7 @@ app.post('/send-notification', (req, res) => {
     }
   })();
 
-  res.send('Notifications sent');
+  res.send("Notifications sent");
 });
 
 const PORT = process.env.PORT || 3000;
