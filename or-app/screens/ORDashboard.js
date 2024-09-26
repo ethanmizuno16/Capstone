@@ -13,7 +13,7 @@ import { useSurgery } from "../context/SurgeryContext";  // Corrected path
 const { width } = Dimensions.get("window");
 const cardWidth = width * 0.9;
 
-const HomeInterface = ({ navigation }) => {
+const ORDashboard = ({ navigation }) => {  // Updated component name
   const { orData, getSurgerySteps } = useSurgery(); // Use the context to access OR data and surgery steps
 
   // Function to calculate the completion percentage of the current surgery step
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeInterface;
+export default ORDashboard;

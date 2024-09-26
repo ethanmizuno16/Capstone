@@ -6,11 +6,16 @@ import {
 } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
-// Updated paths
-import HomeInterface from "../screens/HomeInterface"; 
-import DetailedOR from "../screens/DetailedOR"; 
+// Import all screens
+import ORDashboard from "../screens/ORDashboard";  // Updated import
+import HomeScreen from "../screens/HomeScreen";
+import DetailedOR from "../screens/DetailedOR";
+import PACUScreen from "../screens/PACUScreen";
+import RegionalScreen from "../screens/RegionalScreen";
+import AcutePainScreen from "../screens/AcutePainScreen";
+import ObstetricsScreen from "../screens/ObstetricsScreen";
 import ProfileScreen from "../components/ProfileScreen";
-import PushNotificationsScreen from "../components/PushNotificationsScreen";
+import PushNotificationsScreen from "../components/PushNotificationsScreen"; // Import PushNotificationsScreen
 import { SafeAreaView } from "react-native";
 
 const Stack = createStackNavigator();
@@ -20,9 +25,14 @@ function HomeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="HomeInterface"
-        component={HomeInterface}
-        options={{ title: "OR List" }}
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ title: "Home" }}
+      />
+      <Stack.Screen
+        name="ORDashboard"
+        component={ORDashboard}
+        options={{ title: "OR Dashboard" }}  // Updated title for clarity
       />
       <Stack.Screen
         name="DetailedOR"
@@ -30,9 +40,29 @@ function HomeStack() {
         options={{ title: "OR Details" }}
       />
       <Stack.Screen
-        name="PushNotifications"
+        name="PACUScreen"
+        component={PACUScreen}
+        options={{ title: "PACU" }}
+      />
+      <Stack.Screen
+        name="RegionalScreen"
+        component={RegionalScreen}
+        options={{ title: "Regional" }}
+      />
+      <Stack.Screen
+        name="AcutePainScreen"
+        component={AcutePainScreen}
+        options={{ title: "Acute Pain" }}
+      />
+      <Stack.Screen
+        name="ObstetricsScreen"
+        component={ObstetricsScreen}
+        options={{ title: "Obstetrics" }}
+      />
+      <Stack.Screen
+        name="PushNotifications" // Add PushNotificationsScreen to the stack
         component={PushNotificationsScreen}
-        options={{ title: "Push Notifications" }}
+        options={{ title: "Messaging" }}
       />
     </Stack.Navigator>
   );
@@ -67,9 +97,7 @@ const MenuInterface = () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="HomeStack" component={HomeStack} />
-      {/* Assuming you want ProfileScreen to be accessible directly from the drawer as well */}
       <Drawer.Screen name="Profile" component={ProfileScreen} />
-      {/* You can add more screens here as needed */}
     </Drawer.Navigator>
   );
 };
