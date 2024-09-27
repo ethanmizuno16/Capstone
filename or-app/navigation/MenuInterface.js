@@ -5,9 +5,10 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
+import { SafeAreaView } from "react-native";
 
-// Import all screens
-import ORDashboard from "../screens/ORDashboard";  // Updated import
+// Import screens
+import ORDashboard from "../screens/ORDashboard";
 import HomeScreen from "../screens/HomeScreen";
 import DetailedOR from "../screens/DetailedOR";
 import PACUScreen from "../screens/PACUScreen";
@@ -15,12 +16,13 @@ import RegionalScreen from "../screens/RegionalScreen";
 import AcutePainScreen from "../screens/AcutePainScreen";
 import ObstetricsScreen from "../screens/ObstetricsScreen";
 import ProfileScreen from "../components/ProfileScreen";
-import PushNotificationsScreen from "../components/PushNotificationsScreen"; // Import PushNotificationsScreen
-import { SafeAreaView } from "react-native";
+import PushNotificationsScreen from "../components/PushNotificationsScreen";
 
+// Create Stack and Drawer Navigators
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+// Define HomeStack (Stack Navigator)
 function HomeStack() {
   return (
     <Stack.Navigator>
@@ -32,7 +34,7 @@ function HomeStack() {
       <Stack.Screen
         name="ORDashboard"
         component={ORDashboard}
-        options={{ title: "OR Dashboard" }}  // Updated title for clarity
+        options={{ title: "OR Dashboard" }}
       />
       <Stack.Screen
         name="DetailedOR"
@@ -60,7 +62,7 @@ function HomeStack() {
         options={{ title: "Obstetrics" }}
       />
       <Stack.Screen
-        name="PushNotifications" // Add PushNotificationsScreen to the stack
+        name="PushNotifications"
         component={PushNotificationsScreen}
         options={{ title: "Messaging" }}
       />
@@ -68,6 +70,7 @@ function HomeStack() {
   );
 }
 
+// Define custom content for the drawer
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
@@ -90,6 +93,7 @@ function CustomDrawerContent(props) {
   );
 }
 
+// Main MenuInterface with Drawer Navigator
 const MenuInterface = () => {
   return (
     <Drawer.Navigator

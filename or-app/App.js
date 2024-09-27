@@ -1,59 +1,74 @@
-import "react-native-gesture-handler";
-import React, { useState, useEffect, useRef } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+// Import necessary modules and components from React and React Native
+import "react-native-gesture-handler"; // Enables gesture handling for navigation
+import React, { useState, useEffect, useRef } from "react"; // Core React hooks
+import { NavigationContainer } from "@react-navigation/native"; // Provides navigation context
 
-// Update imports based on your new structure
-import MenuInterface from "./navigation/MenuInterface"; 
-import { SurgeryProvider } from "./context/SurgeryContext";
-import { registerForPushNotificationsAsync } from "./services/notifications";
+// Import your custom components and services
+import MenuInterface from "./navigation/MenuInterface"; // Your navigation menu interface
+import { SurgeryProvider } from "./context/SurgeryContext"; // Context provider for surgeries
+import { registerForPushNotificationsAsync } from "./services/notifications"; // Function to register for push notifications
 
-import * as Notifications from "expo-notifications";
-import { Alert } from "react-native";
+// Import notifications handling from Expo and alert handling from React Native
+import * as Notifications from "expo-notifications"; // Manages notification features
+import { Alert } from "react-native"; // Provides native alert functionality
 
-
+// Define the main functional component of your app
 export default function App() {
+  // State to hold the Expo push notification token
   const [expoPushToken, setExpoPushToken] = useState("");
+
+  // Refs to store notification listeners, allowing them to persist between renders
   const notificationListener = useRef();
   const responseListener = useRef();
 
+  // useEffect hook runs once when the component mounts, handling push notification setup
   useEffect(() => {
+    // Call function to register for push notifications and store the token
     registerForPushNotificationsAsync(setExpoPushToken);
 
-    // This listener is fired whenever a notification is received while the app is foregrounded
+    // Set up listener for incoming notifications when the app is running in the foreground
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
+        // Extract title, body, and data from the notification
         const { title, body, data } = notification.request.content;
+        // Show an alert with the notification details
         Alert.alert(
-          title || "Notification Received",
-          body || `OR ${data.orId} is now at ${data.newStage} stage.`,
+          title || "Notification Received", // Default title if none is provided
+          body || `OR ${data.orId} is now at ${data.newStage} stage.`, // Show a message based on the OR stage if no body is provided
         );
       });
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    // Set up listener for when the user interacts with a notification (foreground, background, or app killed)
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
+        // Extract the notification content from the response
         const { notification } = response;
         const { title, body, data } = notification.request.content;
+        // Show an alert based on the notification content when a response is received
         Alert.alert(
-          title || "Notification Received",
-          body || `OR ${data.orId} is now at ${data.newStage} stage.`,
+          title || "Notification Received", // Default title
+          body || `OR ${data.orId} is now at ${data.newStage} stage.`, // Show a message based on the OR stage
         );
       });
 
+    // Cleanup function: removes the notification listeners when the component is unmounted
     return () => {
       Notifications.removeNotificationSubscription(
-        notificationListener.current,
+        notificationListener.current, // Remove notification listener
       );
-      Notifications.removeNotificationSubscription(responseListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current); // Remove response listener
     };
-  }, []);
+  }, []); // Empty dependency array means this effect only runs once (on mount)
 
+  // Return the app's main component tree
   return (
+    // Wrap everything in the SurgeryProvider to make surgery-related data available to all components
     <SurgeryProvider>
+      {/* NavigationContainer provides the navigation context for the app */}
       <NavigationContainer>
+        {/* MenuInterface contains the navigation menu (drawer or stack) */}
         <MenuInterface />
       </NavigationContainer>
     </SurgeryProvider>
   );
 }
-

@@ -8,7 +8,7 @@ import {
   Animated,
 } from "react-native";
 // Correct the import path for SurgeryContext
-import { useSurgery } from "../context/SurgeryContext";  // Corrected path
+import { useSurgery } from "../context/SurgeryContext"; // Corrected path
 
 const PushNotificationsScreen = ({ route, navigation }) => {
   const { or } = route.params;
@@ -17,11 +17,14 @@ const PushNotificationsScreen = ({ route, navigation }) => {
 
   const currentStageIndex = steps.findIndex((step) => step === or.surgeryStage);
   const [completed, setCompleted] = useState(
-    steps.map((_, index) => index <= currentStageIndex));
+    steps.map((_, index) => index <= currentStageIndex),
+  );
 
   const animations = useRef(
     steps.map(
-      (_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0))).current;
+      (_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0),
+    ),
+  ).current;
 
   const toggleStep = (index) => {
     let newCompleted = [...completed];
@@ -43,23 +46,20 @@ const PushNotificationsScreen = ({ route, navigation }) => {
   const sendPushNotification = async (orId, newStage, surgeryType) => {
     console.log(`Sending push notification for OR ${orId}, stage ${newStage}`);
     try {
-      const response = await fetch(
-        "http://10.0.0.55:8081/send-notification",
-        {
-          // Updated with your local IP address
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "Surgery Update",
-            body: `${orId} is now at ${newStage} stage.`,
-            data: { orId, newStage },
-            priority: "normal",
-          }),
+      const response = await fetch("http://10.0.0.55:8081/send-notification", {
+        // Updated with your local IP address
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          title: "Surgery Update",
+          body: `${orId} is now at ${newStage} stage.`,
+          data: { orId, newStage },
+          priority: "normal",
+        }),
+      });
       console.log("Notification sent:", response);
     } catch (error) {
       console.error("Error sending notification:", error);
@@ -69,23 +69,20 @@ const PushNotificationsScreen = ({ route, navigation }) => {
   const sendEmergencyNotification = async () => {
     console.log(`Sending emergency notification for OR ${or.id}`);
     try {
-      const response = await fetch(
-        "http://10.0.0.55:8081/send-notification",
-        {
-          // Updated with your local IP address
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "Emergency Alert!",
-            body: `Emergency in Operating Room Number ${or.id}!`,
-            data: { orId: or.id },
-            priority: "high",
-          }),
+      const response = await fetch("http://10.0.0.55:8081/send-notification", {
+        // Updated with your local IP address
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          title: "Emergency Alert!",
+          body: `Emergency in Operating Room Number ${or.id}!`,
+          data: { orId: or.id },
+          priority: "high",
+        }),
+      });
       console.log("Emergency notification sent:", response);
     } catch (error) {
       console.error("Error sending emergency notification:", error);
