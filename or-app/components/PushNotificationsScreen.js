@@ -17,14 +17,11 @@ const PushNotificationsScreen = ({ route, navigation }) => {
 
   const currentStageIndex = steps.findIndex((step) => step === or.surgeryStage);
   const [completed, setCompleted] = useState(
-    steps.map((_, index) => index <= currentStageIndex),
-  );
+    steps.map((_, index) => index <= currentStageIndex));
 
   const animations = useRef(
     steps.map(
-      (_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0),
-    ),
-  ).current;
+      (_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0))).current;
 
   const toggleStep = (index) => {
     let newCompleted = [...completed];
@@ -47,7 +44,7 @@ const PushNotificationsScreen = ({ route, navigation }) => {
     console.log(`Sending push notification for OR ${orId}, stage ${newStage}`);
     try {
       const response = await fetch(
-        "http://10.19.249.228:3000/send-notification",
+        "http://10.0.0.55:8081/send-notification",
         {
           // Updated with your local IP address
           method: "POST",
@@ -73,7 +70,7 @@ const PushNotificationsScreen = ({ route, navigation }) => {
     console.log(`Sending emergency notification for OR ${or.id}`);
     try {
       const response = await fetch(
-        "http://10.19.249.228:3000/send-notification",
+        "http://10.0.0.55:8081/send-notification",
         {
           // Updated with your local IP address
           method: "POST",

@@ -1,43 +1,56 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the OR App!</Text>
-      
-      {/* Button for OR Dashboard Screen */}
-      <Button 
-        title="Go to OR Dashboard" 
-        onPress={() => navigation.navigate('ORDashboard')}  // Updated navigation to ORDashboard
-      />
 
-      {/* Button for PACU Screen */}
-      <Button 
-        title="Go to PACU" 
+      {/* OR Dashboard Box */}
+      <TouchableOpacity 
+        style={styles.box} 
+        onPress={() => navigation.navigate('ORDashboard')}
+      >
+        <FontAwesome name="dashboard" size={24} color="#4B2E83" />
+        <Text style={styles.boxText}>OR Dashboard</Text>
+      </TouchableOpacity>
+
+      {/* PACU Box */}
+      <TouchableOpacity 
+        style={styles.box} 
         onPress={() => navigation.navigate('PACUScreen')}
-      />
-      
-      {/* Button for Regional Screen */}
-      <Button 
-        title="Go to Regional" 
+      >
+        <FontAwesome name="hospital-o" size={24} color="#4B2E83" />
+        <Text style={styles.boxText}>PACU</Text>
+      </TouchableOpacity>
+
+      {/* Regional Box */}
+      <TouchableOpacity 
+        style={styles.box} 
         onPress={() => navigation.navigate('RegionalScreen')}
-        style={styles.button}
-      />
-      
-      {/* Button for Acute Pain Screen */}
-      <Button 
-        title="Go to Acute Pain" 
+      >
+        <FontAwesome name="map-marker" size={24} color="#4B2E83" />
+        <Text style={styles.boxText}>Regional</Text>
+      </TouchableOpacity>
+
+      {/* Acute Pain Box */}
+      <TouchableOpacity 
+        style={styles.box} 
         onPress={() => navigation.navigate('AcutePainScreen')}
-        style={styles.button}
-      />
-      
-      {/* Button for Obstetrics Screen */}
-      <Button 
-        title="Go to Obstetrics" 
+      >
+        <FontAwesome name="heartbeat" size={24} color="#4B2E83" />
+        <Text style={styles.boxText}>Acute Pain</Text>
+      </TouchableOpacity>
+
+      {/* Obstetrics Box */}
+      <TouchableOpacity 
+        style={styles.box} 
         onPress={() => navigation.navigate('ObstetricsScreen')}
-        style={styles.button}
-      />
+      >
+        <FontAwesome name="user-md" size={24} color="#4B2E83" />
+        <Text style={styles.boxText}>Obstetrics</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -50,12 +63,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#4B2E83',
+    marginBottom: 40,
   },
-  button: {
-    marginVertical: 10,
+  box: {
+    width: '85%',
+    padding: 15,
+    marginVertical: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 15, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+    alignItems: 'center', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  boxText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#4B2E83',
+    marginLeft: 10,
   },
 });
 
