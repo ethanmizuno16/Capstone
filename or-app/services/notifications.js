@@ -29,7 +29,7 @@ export async function registerForPushNotificationsAsync(setExpoPushToken) {
     console.log(token);
 
     // Send the token to your backend server
-    await fetch("http://10.19.249.228:3000/store-push-token", {
+    await fetch("http://10.0.0.55:8081/store-push-token", {
       method: "POST",
       headers: {
         Accept: "application/json",
