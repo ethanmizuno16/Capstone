@@ -25,7 +25,7 @@ const Drawer = createDrawerNavigator();
 // Define HomeStack (Stack Navigator)
 function HomeStack() {
   return (
-    <Stack.Navigator >
+    <Stack.Navigator>
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}

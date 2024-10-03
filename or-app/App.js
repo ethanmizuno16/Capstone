@@ -12,6 +12,9 @@ import { registerForPushNotificationsAsync } from "./services/notifications"; //
 import * as Notifications from "expo-notifications"; // Manages notification features
 import { Alert } from "react-native"; // Provides native alert functionality
 
+// Import react-native-paper components
+import { Provider as PaperProvider } from "react-native-paper"; // Import the PaperProvider for Material Design UI
+
 // Define the main functional component of your app
 export default function App() {
   // State to hold the Expo push notification token
@@ -64,11 +67,14 @@ export default function App() {
   return (
     // Wrap everything in the SurgeryProvider to make surgery-related data available to all components
     <SurgeryProvider>
-      {/* NavigationContainer provides the navigation context for the app */}
-      <NavigationContainer>
-        {/* MenuInterface contains the navigation menu (drawer or stack) */}
-        <MenuInterface />
-      </NavigationContainer>
+      {/* Wrap the entire app in PaperProvider to enable react-native-paper components */}
+      <PaperProvider>
+        {/* NavigationContainer provides the navigation context for the app */}
+        <NavigationContainer>
+          {/* MenuInterface contains the navigation menu (drawer or stack) */}
+          <MenuInterface />
+        </NavigationContainer>
+      </PaperProvider>
     </SurgeryProvider>
   );
 }
