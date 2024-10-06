@@ -84,6 +84,7 @@ const PACUScreen = () => {
   );
 };
 
+// Styles for the screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
