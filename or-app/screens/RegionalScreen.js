@@ -147,13 +147,9 @@ const RegionalScreen = () => {
 
                 <DataTable.Cell style={styles.assignedClinician}>
                   <Picker
-                    selectedValue={
-                      request.assignedClinician || "Select a clinician"
-                    }
+                    selectedValue={request.assignedClinician || "Select a clinician"}
                     style={styles.picker}
-                    onValueChange={(value) =>
-                      assignClinician(request.id, value)
-                    }
+                    onValueChange={(value) => assignClinician(request.id, value)}
                   >
                     <Picker.Item label="Select a clinician" value="" />
                     {anesthesiologists
@@ -260,14 +256,17 @@ const styles = StyleSheet.create({
   assignedClinician: {
     flex: 2,
     minWidth: 150,
+    paddingHorizontal: 10,
   },
   urgency: {
     flex: 1,
     minWidth: 100,
   },
   picker: {
-    width: 130,
-    height: 40,
+    width: '100%',
+    height: 50,
+    borderRadius: 5,
+    borderWidth: 1,
   },
   urgentText: {
     color: "red",

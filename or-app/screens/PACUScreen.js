@@ -1,50 +1,86 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Switch } from "react-native";
-import { DataTable } from 'react-native-paper';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { Checkbox } from "react-native-paper"; // Import Checkbox from react-native-paper
 
 const PACUScreen = () => {
-  // Sample list of PACU patients
-  const [patients, setPatients] = useState([
-    { id: 1, name: "John Doe", mrn: "123456", procedure: "Knee Replacement", readyForDischarge: false },
-    { id: 2, name: "Jane Smith", mrn: "654321", procedure: "Hip Replacement", readyForDischarge: false },
-    { id: 3, name: "Mike Johnson", mrn: "789123", procedure: "Appendectomy", readyForDischarge: false },
+  // Sample data for patients in PACU
+  const [pacuPatients, setPacuPatients] = useState([
+    {
+      id: 1,
+      patientName: "John Doe",
+      mrn: "123456",
+      dob: "Jan 15, 1980",
+      isReadyForDischarge: false,
+    },
+    {
+      id: 2,
+      patientName: "Jane Smith",
+      mrn: "654321",
+      dob: "Mar 22, 1975",
+      isReadyForDischarge: false,
+    },
+    {
+      id: 3,
+      patientName: "Mike Johnson",
+      mrn: "789123",
+      dob: "Jul 10, 1990",
+      isReadyForDischarge: true,
+    },
+    {
+      id: 4,
+      patientName: "Sarah Wilson",
+      mrn: "987654",
+      dob: "Feb 19, 1985",
+      isReadyForDischarge: false,
+    },
   ]);
 
-  // Function to toggle the ready-for-discharge state
-  const toggleDischarge = (id) => {
-    const updatedPatients = patients.map((patient) =>
-      patient.id === id ? { ...patient, readyForDischarge: !patient.readyForDischarge } : patient
+  // Toggle discharge readiness for a patient
+  const toggleDischargeReadiness = (id) => {
+    setPacuPatients((prevPatients) =>
+      prevPatients.map((patient) =>
+        patient.id === id
+          ? { ...patient, isReadyForDischarge: !patient.isReadyForDischarge }
+          : patient
+      )
     );
-    setPatients(updatedPatients);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>PACU Patients</Text>
+    <ScrollView style={styles.container}>
+        {/* Title for PACU patients */}
+        <Text style={styles.tableTitle}>PACU Patients</Text>
 
-      <DataTable style={styles.table}>
-        <DataTable.Header>
-          <DataTable.Title style={styles.column}>Patient Name</DataTable.Title>
-          <DataTable.Title style={styles.column}>MRN</DataTable.Title>
-          <DataTable.Title style={styles.column}>Procedure</DataTable.Title>
-          <DataTable.Title style={styles.column}>Ready for Discharge</DataTable.Title>
-        </DataTable.Header>
+        {/* PACU patients table */}
+        {pacuPatients.map((patient) => (
+          <View style={styles.patientRow} key={patient.id}>
+            {/* Patient Details */}
+            <View style={styles.patientDetails}>
+              <Text style={styles.patientName}>{patient.patientName}</Text>
+              <Text style={styles.patientInfo}>MRN: {patient.mrn}</Text>
+              <Text style={styles.patientInfo}>DOB: {patient.dob}</Text>
+            </View>
 
-        {patients.map((patient) => (
-          <DataTable.Row key={patient.id} style={styles.tableRow}>
-            <DataTable.Cell style={styles.column}>{patient.name}</DataTable.Cell>
-            <DataTable.Cell style={styles.column}>{patient.mrn}</DataTable.Cell>
-            <DataTable.Cell style={styles.column}>{patient.procedure}</DataTable.Cell>
-            <DataTable.Cell style={styles.column}>
-              <Switch
-                value={patient.readyForDischarge}
-                onValueChange={() => toggleDischarge(patient.id)}
-              />
-            </DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </DataTable>
-    </View>
+            {/* Discharge Checkbox */}
+            <TouchableOpacity
+            style={styles.checkboxContainer}
+            onPress={() => toggleDischargeReadiness(patient.id)}
+          >
+            <Text style={styles.dischargeLabel}>Ready for Discharge</Text>
+            <Checkbox
+              status={patient.isReadyForDischarge ? "checked" : "unchecked"}
+              color={patient.isReadyForDischarge ? "#4CAF50" : "#f44336"} // Change color based on readiness
+            />
+          </TouchableOpacity>
+        </View>
+      ))}
+    </ScrollView>
   );
 };
 
@@ -52,24 +88,58 @@ const PACUScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#f8f9fa", // Light background for the whole screen
+    padding: 16,
   },
-  heading: {
-    fontSize: 20,
+  tableTitle: {
+    fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: 'center',
+    marginBottom: 15,
+    textAlign: "center",
+    color: "#333",
   },
-  table: {
-    width: '100%', // Ensures table takes up the full width of the screen
+  patientRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 12, // More rounded for modern look
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4, // Slight elevation for a card effect
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
-  tableRow: {
-    height: 50, // Adjust row height for more space
+  patientDetails: {
+    flex: 2,
+    paddingRight: 10,
   },
-  column: {
-    flex: 1, // Distribute columns evenly across the table
-    justifyContent: 'flex-start',
+  patientName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 4,
+  },
+  patientInfo: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 2,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f1f3f4",
+    padding: 8,
+    borderRadius: 8,
+  },
+  dischargeLabel: {
+    fontSize: 14,
+    marginRight: 8,
+    color: "#333",
   },
 });
 
