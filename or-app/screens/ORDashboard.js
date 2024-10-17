@@ -45,7 +45,9 @@ const ORDashboard = ({ navigation }) => {
             </Text>
             <Text style={styles.cardContent}>Surgeon: {item.surgeonName}</Text>
             <Text style={styles.cardContent}>
-              Anesthesiologist: {item.raName}
+              {item.replacement
+                ? `Anesthesia: ${item.raName} (${item.shift}) → ${item.replacement.name} (${item.replacement.shift})`
+                : `Anesthesia: ${item.raName} (${item.shift}) → finish case`}
             </Text>
             <Text style={styles.cardContent}>Stage: {item.surgeryStage}</Text>
             <Text style={styles.cardContent}>

@@ -266,7 +266,12 @@ const DetailedOR = ({ route, navigation }) => {
         <View style={styles.detailBox}>
           <Text style={styles.title}>{or.id}</Text>
           <Text style={styles.detailText}>Surgeon Name: {or.surgeonName}</Text>
-          <Text style={styles.detailText}>Anesthesiologist: {or.raName}</Text>
+          <Text style={styles.detailText}>
+            {or.replacement
+              ? `Anesthesia: ${or.raName} (${or.shift}) —> ${or.replacement.name} (${or.replacement.shift})`
+              : `Anesthesia: ${or.raName} (${or.shift}) —> finish case`}
+          </Text>
+
           <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
           <Text style={styles.detailText}>
             Surgery Stage: {or.surgeryStage}

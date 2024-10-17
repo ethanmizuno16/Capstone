@@ -9,7 +9,7 @@ import {
 import { Checkbox } from "react-native-paper"; // Import Checkbox from react-native-paper
 
 const PACUScreen = () => {
-  // Sample data for patients in PACU
+  // Sample data for patients in PACU, now including anesthesiologist information
   const [pacuPatients, setPacuPatients] = useState([
     {
       id: 1,
@@ -17,6 +17,8 @@ const PACUScreen = () => {
       mrn: "123456",
       dob: "Jan 15, 1980",
       isReadyForDischarge: false,
+      anesthesiologist: "Dr. Chris Eixenberger",
+      shift: "Call Shift #2",
     },
     {
       id: 2,
@@ -24,6 +26,8 @@ const PACUScreen = () => {
       mrn: "654321",
       dob: "Mar 22, 1975",
       isReadyForDischarge: false,
+      anesthesiologist: "Dr. Samantha Jones",
+      shift: "Call Shift #3",
     },
     {
       id: 3,
@@ -31,6 +35,8 @@ const PACUScreen = () => {
       mrn: "789123",
       dob: "Jul 10, 1990",
       isReadyForDischarge: true,
+      anesthesiologist: "Dr. Robert Johnson",
+      shift: "Call Shift #4",
     },
     {
       id: 4,
@@ -38,6 +44,8 @@ const PACUScreen = () => {
       mrn: "987654",
       dob: "Feb 19, 1985",
       isReadyForDischarge: false,
+      anesthesiologist: "Dr. Emily Davis",
+      shift: "Call Shift #1",
     },
   ]);
 
@@ -47,28 +55,33 @@ const PACUScreen = () => {
       prevPatients.map((patient) =>
         patient.id === id
           ? { ...patient, isReadyForDischarge: !patient.isReadyForDischarge }
-          : patient
-      )
+          : patient,
+      ),
     );
   };
 
   return (
     <ScrollView style={styles.container}>
-        {/* Title for PACU patients */}
-        <Text style={styles.tableTitle}>PACU Patients</Text>
+      {/* Title for PACU patients */}
+      <Text style={styles.tableTitle}>PACU Patients</Text>
 
-        {/* PACU patients table */}
-        {pacuPatients.map((patient) => (
-          <View style={styles.patientRow} key={patient.id}>
-            {/* Patient Details */}
-            <View style={styles.patientDetails}>
-              <Text style={styles.patientName}>{patient.patientName}</Text>
-              <Text style={styles.patientInfo}>MRN: {patient.mrn}</Text>
-              <Text style={styles.patientInfo}>DOB: {patient.dob}</Text>
-            </View>
+      {/* PACU patients table */}
+      {pacuPatients.map((patient) => (
+        <View style={styles.patientRow} key={patient.id}>
+          {/* Patient Details */}
+          <View style={styles.patientDetails}>
+            <Text style={styles.patientName}>{patient.patientName}</Text>
+            <Text style={styles.patientInfo}>MRN: {patient.mrn}</Text>
+            <Text style={styles.patientInfo}>DOB: {patient.dob}</Text>
 
-            {/* Discharge Checkbox */}
-            <TouchableOpacity
+            {/* New: Anesthesiologist Details */}
+            <Text style={styles.anesthesiaInfo}>
+              Anesthesiologist: {patient.anesthesiologist} ({patient.shift})
+            </Text>
+          </View>
+
+          {/* Discharge Checkbox */}
+          <TouchableOpacity
             style={styles.checkboxContainer}
             onPress={() => toggleDischargeReadiness(patient.id)}
           >
@@ -128,6 +141,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginBottom: 2,
+  },
+  anesthesiaInfo: {
+    fontSize: 14,
+    color: "#007bff", // Make anesthesiologist information blue for visibility
+    marginTop: 5,
   },
   checkboxContainer: {
     flexDirection: "row",

@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Modal, FlatList } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Switch,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from "react-native";
 
 // Function to convert 12-hour time to 24-hour format
 const convertTo24Hour = (time) => {
-  const [hourMinute, modifier] = time.split(' ');
-  let [hours, minutes] = hourMinute.split(':');
+  const [hourMinute, modifier] = time.split(" ");
+  let [hours, minutes] = hourMinute.split(":");
 
-  if (hours === '12') {
-    hours = '00';
+  if (hours === "12") {
+    hours = "00";
   }
-  if (modifier === 'PM') {
+  if (modifier === "PM") {
     hours = parseInt(hours, 10) + 12;
   }
 
@@ -21,70 +30,70 @@ const RegionalScreen = () => {
   const [consultRequests, setConsultRequests] = useState([
     {
       id: 1,
-      name: 'John Doe',
-      mrn: '123456',
-      dob: 'Jan 15, 1980',
-      procedure: 'Femoral Nerve Block',
-      time: '10:30 AM',
+      name: "John Doe",
+      mrn: "123456",
+      dob: "Jan 15, 1980",
+      procedure: "Femoral Nerve Block",
+      time: "10:30 AM",
       urgent: false,
-      requestingPhysician: 'Dr. Green',
-      assignedClinician: '',
+      requestingPhysician: "Dr. Green",
+      assignedClinician: "",
     },
     {
       id: 2,
-      name: 'Jane Smith',
-      mrn: '654321',
-      dob: 'Mar 22, 1975',
-      procedure: 'Sciatic Nerve Block',
-      time: '11:00 AM',
+      name: "Jane Smith",
+      mrn: "654321",
+      dob: "Mar 22, 1975",
+      procedure: "Sciatic Nerve Block",
+      time: "11:00 AM",
       urgent: true,
-      requestingPhysician: 'Dr. White',
-      assignedClinician: '',
+      requestingPhysician: "Dr. White",
+      assignedClinician: "",
     },
     {
       id: 3,
-      name: 'Mike Johnson',
-      mrn: '789123',
-      dob: 'Jul 10, 1990',
-      procedure: 'Interscalene Block',
-      time: '9:15 AM',
+      name: "Mike Johnson",
+      mrn: "789123",
+      dob: "Jul 10, 1990",
+      procedure: "Interscalene Block",
+      time: "9:15 AM",
       urgent: false,
-      requestingPhysician: 'Dr. Adams',
-      assignedClinician: '',
+      requestingPhysician: "Dr. Adams",
+      assignedClinician: "",
     },
     {
       id: 4,
-      name: 'Emily Brown',
-      mrn: '456789',
-      dob: 'Oct 5, 1982',
-      procedure: 'Axillary Nerve Block',
-      time: '8:00 AM',
+      name: "Emily Brown",
+      mrn: "456789",
+      dob: "Oct 5, 1982",
+      procedure: "Axillary Nerve Block",
+      time: "8:00 AM",
       urgent: true,
-      requestingPhysician: 'Dr. Brown',
-      assignedClinician: '',
-    }
+      requestingPhysician: "Dr. Brown",
+      assignedClinician: "",
+    },
   ]);
 
   // Anesthesiologists data with availability status
   const [anesthesiologists] = useState([
-    { name: 'Dr. Lee', available: true },
-    { name: 'Dr. Adams', available: false },
-    { name: 'Dr. Smith', available: true },
-    { name: 'Dr. Patel', available: false },
+    { name: "Dr. Lee", available: true },
+    { name: "Dr. Adams", available: false },
+    { name: "Dr. Smith", available: true },
+    { name: "Dr. Patel", available: false },
   ]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedConsultId, setSelectedConsultId] = useState(null);
 
   // Sorting state
-  const [sortField, setSortField] = useState('time');
+  const [sortField, setSortField] = useState("time");
 
   // Function to toggle urgency
   const toggleUrgency = (id) => {
     setConsultRequests((prevConsults) =>
       prevConsults.map((consult) =>
-        consult.id === id ? { ...consult, urgent: !consult.urgent } : consult
-      )
+        consult.id === id ? { ...consult, urgent: !consult.urgent } : consult,
+      ),
     );
   };
 
@@ -92,8 +101,10 @@ const RegionalScreen = () => {
   const selectClinician = (clinician) => {
     setConsultRequests((prevConsults) =>
       prevConsults.map((consult) =>
-        consult.id === selectedConsultId ? { ...consult, assignedClinician: clinician } : consult
-      )
+        consult.id === selectedConsultId
+          ? { ...consult, assignedClinician: clinician }
+          : consult,
+      ),
     );
     setModalVisible(false);
   };
@@ -101,9 +112,12 @@ const RegionalScreen = () => {
   // Function to sort consults based on time or urgency
   const sortConsults = (field) => {
     const sortedConsults = [...consultRequests].sort((a, b) => {
-      if (field === 'time') {
-        return new Date(`1970-01-01T${convertTo24Hour(a.time)}`) - new Date(`1970-01-01T${convertTo24Hour(b.time)}`);
-      } else if (field === 'urgent') {
+      if (field === "time") {
+        return (
+          new Date(`1970-01-01T${convertTo24Hour(a.time)}`) -
+          new Date(`1970-01-01T${convertTo24Hour(b.time)}`)
+        );
+      } else if (field === "urgent") {
         return a.urgent === b.urgent ? 0 : a.urgent ? -1 : 1;
       }
     });
@@ -115,13 +129,23 @@ const RegionalScreen = () => {
     <View style={styles.container}>
       {/* Sorting buttons */}
       <View style={styles.sortingButtons}>
-        <TouchableOpacity onPress={() => sortConsults('time')}>
-          <Text style={[styles.sortButton, sortField === 'time' && styles.activeSortButton]}>
+        <TouchableOpacity onPress={() => sortConsults("time")}>
+          <Text
+            style={[
+              styles.sortButton,
+              sortField === "time" && styles.activeSortButton,
+            ]}
+          >
             Sort by Time
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => sortConsults('urgent')}>
-          <Text style={[styles.sortButton, sortField === 'urgent' && styles.activeSortButton]}>
+        <TouchableOpacity onPress={() => sortConsults("urgent")}>
+          <Text
+            style={[
+              styles.sortButton,
+              sortField === "urgent" && styles.activeSortButton,
+            ]}
+          >
             Sort by Urgency
           </Text>
         </TouchableOpacity>
@@ -135,9 +159,15 @@ const RegionalScreen = () => {
               <Text style={styles.consultName}>{consult.name}</Text>
               <Text style={styles.consultInfo}>MRN: {consult.mrn}</Text>
               <Text style={styles.consultInfo}>DOB: {consult.dob}</Text>
-              <Text style={styles.consultInfo}>Procedure: {consult.procedure}</Text>
-              <Text style={styles.consultInfo}>Time of Request: {convertTo24Hour(consult.time)}</Text>
-              <Text style={styles.consultInfo}>Requesting Physician: {consult.requestingPhysician}</Text>
+              <Text style={styles.consultInfo}>
+                Procedure: {consult.procedure}
+              </Text>
+              <Text style={styles.consultInfo}>
+                Time of Request: {convertTo24Hour(consult.time)}
+              </Text>
+              <Text style={styles.consultInfo}>
+                Requesting Physician: {consult.requestingPhysician}
+              </Text>
 
               {/* Assigned Clinician with Modal */}
               <TouchableOpacity
@@ -145,9 +175,13 @@ const RegionalScreen = () => {
                 onPress={() => {
                   setSelectedConsultId(consult.id);
                   setModalVisible(true);
-                }}>
+                }}
+              >
                 <Text style={styles.consultInfo}>
-                  Assigned Clinician: {consult.assignedClinician ? consult.assignedClinician : 'Select'}
+                  Assigned Clinician:{" "}
+                  {consult.assignedClinician
+                    ? consult.assignedClinician
+                    : "Select"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -171,10 +205,11 @@ const RegionalScreen = () => {
               <Text
                 style={[
                   styles.anesthesiologistName,
-                  anesthesiologist.available ? styles.available : styles.busy
+                  anesthesiologist.available ? styles.available : styles.busy,
                 ]}
               >
-                {anesthesiologist.name} ({anesthesiologist.available ? 'Available' : 'Busy'})
+                {anesthesiologist.name} (
+                {anesthesiologist.available ? "Available" : "Busy"})
               </Text>
             </View>
           ))}
@@ -197,7 +232,7 @@ const RegionalScreen = () => {
                 <TouchableOpacity
                   style={[
                     styles.modalItem,
-                    !item.available && { backgroundColor: '#f0f0f0' },
+                    !item.available && { backgroundColor: "#f0f0f0" },
                   ]}
                   onPress={() => item.available && selectClinician(item.name)}
                   disabled={!item.available}
@@ -205,16 +240,19 @@ const RegionalScreen = () => {
                   <Text
                     style={[
                       styles.modalItemText,
-                      !item.available && { color: '#888' },
+                      !item.available && { color: "#888" },
                     ]}
                   >
-                    {item.name} {item.available ? '' : '(Busy)'}
+                    {item.name} {item.available ? "" : "(Busy)"}
                   </Text>
                 </TouchableOpacity>
               )}
               keyExtractor={(item, index) => index.toString()}
             />
-            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
@@ -225,29 +263,59 @@ const RegionalScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: '#f5f5f5' },
-  consultRow: { backgroundColor: '#fff', padding: 15, marginVertical: 10, borderRadius: 10, elevation: 3, flexDirection: 'row', justifyContent: 'space-between' },
+  container: { flex: 1, padding: 15, backgroundColor: "#f5f5f5" },
+  consultRow: {
+    backgroundColor: "#fff",
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 10,
+    elevation: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   consultDetails: { flex: 1 },
-  consultName: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
-  consultInfo: { fontSize: 14, color: '#666', flexWrap: 'wrap' },
-  urgentSwitch: { justifyContent: 'center', alignItems: 'center', flexDirection: 'row' },
-  urgentLabel: { marginRight: 10, fontWeight: 'bold' },
-  sortingButtons: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
-  sortButton: { fontSize: 16, color: '#007BFF', fontWeight: 'bold' },
-  activeSortButton: { textDecorationLine: 'underline' },
+  consultName: { fontSize: 18, fontWeight: "bold", marginBottom: 5 },
+  consultInfo: { fontSize: 14, color: "#666", flexWrap: "wrap" },
+  urgentSwitch: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  urgentLabel: { marginRight: 10, fontWeight: "bold" },
+  sortingButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  sortButton: { fontSize: 16, color: "#007BFF", fontWeight: "bold" },
+  activeSortButton: { textDecorationLine: "underline" },
   anesthesiologistsSection: { marginTop: 20 },
-  anesthesiologistsTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+  anesthesiologistsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
   anesthesiologistRow: { paddingVertical: 5 },
   anesthesiologistName: { fontSize: 16 },
-  available: { color: 'green' },
-  busy: { color: 'red' },
-  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-  modalContent: { width: 300, backgroundColor: '#fff', borderRadius: 10, padding: 20 },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 20 },
-  modalItem: { padding: 15, borderBottomWidth: 1, borderColor: '#ddd' },
+  available: { color: "green" },
+  busy: { color: "red" },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+  },
+  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 20 },
+  modalItem: { padding: 15, borderBottomWidth: 1, borderColor: "#ddd" },
   modalItemText: { fontSize: 16 },
-  closeButton: { marginTop: 20, alignItems: 'center' },
-  closeButtonText: { color: '#007BFF', fontWeight: 'bold' },
+  closeButton: { marginTop: 20, alignItems: "center" },
+  closeButtonText: { color: "#007BFF", fontWeight: "bold" },
 });
 
 export default RegionalScreen;
