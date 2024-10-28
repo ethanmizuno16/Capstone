@@ -10,18 +10,15 @@ import {
   FlatList,
 } from "react-native";
 
-// Function to convert 12-hour time to 24-hour format
 const convertTo24Hour = (time) => {
   const [hourMinute, modifier] = time.split(" ");
   let [hours, minutes] = hourMinute.split(":");
-
   if (hours === "12") {
     hours = "00";
   }
   if (modifier === "PM") {
     hours = parseInt(hours, 10) + 12;
   }
-
   return `${hours}:${minutes}`;
 };
 
@@ -120,6 +117,7 @@ const RegionalScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Sorting buttons */}
       <View style={styles.sortingButtons}>
         <TouchableOpacity onPress={() => sortConsults("time")}>
           <Text
@@ -144,6 +142,7 @@ const RegionalScreen = () => {
       </View>
 
       <ScrollView>
+        {/* Render the consult request list */}
         {consultRequests.map((consult) => (
           <View style={styles.consultRow} key={consult.id}>
             <View style={styles.consultDetails}>
@@ -162,6 +161,7 @@ const RegionalScreen = () => {
 
               {/* Assigned Clinician with Modal */}
               <TouchableOpacity
+                style={styles.assignedClinicianBtn}
                 onPress={() => {
                   setSelectedConsultId(consult.id);
                   setModalVisible(true);
@@ -172,22 +172,26 @@ const RegionalScreen = () => {
                   {consult.assignedClinician ? (
                     consult.assignedClinician
                   ) : (
-                    <Text style={styles.selectText}>Select</Text> // Apply distinct style to "Select"
+                    <Text style={styles.selectText}>Select</Text> // Style for "Select" button text
                   )}
                 </Text>
               </TouchableOpacity>
             </View>
 
+            {/* Urgent Switch */}
             <View style={styles.urgentSwitch}>
               <Text style={styles.urgentLabel}>Urgent</Text>
               <Switch
                 value={consult.urgent}
                 onValueChange={() => toggleUrgency(consult.id)}
+                trackColor={{ false: "#ddd", true: "#007BFF" }}
+                thumbColor={consult.urgent ? "#007BFF" : "#f4f3f4"}
               />
             </View>
           </View>
         ))}
 
+        {/* Anesthesiologists Section */}
         <View style={styles.anesthesiologistsSection}>
           <Text style={styles.anesthesiologistsTitle}>Anesthesiologists</Text>
           {anesthesiologists.map((anesthesiologist, index) => (
@@ -206,6 +210,7 @@ const RegionalScreen = () => {
         </View>
       </ScrollView>
 
+      {/* Modal for Selecting Clinician */}
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -263,14 +268,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   consultDetails: { flex: 1 },
-  consultName: { fontSize: 18, fontWeight: "bold", marginBottom: 5 },
-  consultInfo: { fontSize: 14, color: "#666", flexWrap: "wrap" },
+  consultName: { fontSize: 18, fontWeight: "bold", color: "#4B2E83" },
+  consultInfo: { fontSize: 14, color: "#666" },
   urgentSwitch: {
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
   },
-  urgentLabel: { marginRight: 10, fontWeight: "bold" },
+  urgentLabel: { marginRight: 10, fontWeight: "bold", color: "#333" },
   sortingButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -282,6 +287,7 @@ const styles = StyleSheet.create({
   anesthesiologistsTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#4B2E83",
     marginBottom: 10,
   },
   anesthesiologistRow: { paddingVertical: 5 },
