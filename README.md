@@ -38,6 +38,7 @@ For push notifications, configure the IP address in `PushNotificationsScreen.js`
    
 ```javascript
 const response = await fetch("http://10.0.0.55:8081/send-notification", { ... });
+```
 Replace the IP address with your backend server’s address to enable push notifications.
 
 ## Dependencies
