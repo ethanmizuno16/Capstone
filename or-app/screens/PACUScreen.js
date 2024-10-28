@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,57 +7,52 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Checkbox } from "react-native-paper"; // Import Checkbox from react-native-paper
+import { collection, getDocs, doc, updateDoc, QuerySnapshot } from "firebase/firestore"
+import { db } from "../services/firebase";
+
 
 const PACUScreen = () => {
-  // Sample data for patients in PACU, now including anesthesiologist information
-  const [pacuPatients, setPacuPatients] = useState([
-    {
-      id: 1,
-      patientName: "John Doe",
-      mrn: "123456",
-      dob: "Jan 15, 1980",
-      isReadyForDischarge: false,
-      anesthesiologist: "Dr. Chris Eixenberger",
-      shift: "Call Shift #2",
-    },
-    {
-      id: 2,
-      patientName: "Jane Smith",
-      mrn: "654321",
-      dob: "Mar 22, 1975",
-      isReadyForDischarge: false,
-      anesthesiologist: "Dr. Samantha Jones",
-      shift: "Call Shift #3",
-    },
-    {
-      id: 3,
-      patientName: "Mike Johnson",
-      mrn: "789123",
-      dob: "Jul 10, 1990",
-      isReadyForDischarge: true,
-      anesthesiologist: "Dr. Robert Johnson",
-      shift: "Call Shift #4",
-    },
-    {
-      id: 4,
-      patientName: "Sarah Wilson",
-      mrn: "987654",
-      dob: "Feb 19, 1985",
-      isReadyForDischarge: false,
-      anesthesiologist: "Dr. Emily Davis",
-      shift: "Call Shift #1",
-    },
-  ]);
+  const [pacuPatients, setPacuPatients] = useState([]);
+
+  // Fetch PACU patients from Firebase
+  useEffect(() => {
+    const fetchPacuPatients = async () => {
+      try {
+        const patientsCollection = collection(db, "PACU", "People", "Patients");
+        const querySnapshot = await getDocs(patientsCollection);
+        const patientsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setPacuPatients(patientsData);
+      } catch (error) {
+        console.error("Error fetching PACU patients data: ", error);
+      }
+    };
+
+    fetchPacuPatients();
+  }, []);
 
   // Toggle discharge readiness for a patient
-  const toggleDischargeReadiness = (id) => {
-    setPacuPatients((prevPatients) =>
-      prevPatients.map((patient) =>
-        patient.id === id
-          ? { ...patient, isReadyForDischarge: !patient.isReadyForDischarge }
-          : patient,
-      ),
-    );
+  const toggleDischargeReadiness = async (id) => {
+    const currentStatus = pacuPatients.find((patient) => patient.id === id).readyfordischarge;
+
+    try {
+      const patientDocRef = doc(db, "PACU", "People", "Patients", id);
+      await updateDoc(patientDocRef, {
+        readyfordischarge: !currentStatus,
+      });
+
+      setPacuPatients((prevPatients) =>
+        prevPatients.map((patient) =>
+          patient.id === id
+            ? { ...patient, readyfordischarge: !patient.readyfordischarge }
+            : patient,
+        ),
+      );
+    } catch (error) {
+      console.error("Error updating discharge status:", error);
+    }
   };
 
   return (
@@ -70,7 +65,7 @@ const PACUScreen = () => {
         <View style={styles.patientRow} key={patient.id}>
           {/* Patient Details */}
           <View style={styles.patientDetails}>
-            <Text style={styles.patientName}>{patient.patientName}</Text>
+            <Text style={styles.patientName}>{patient.name}</Text>
             <Text style={styles.patientInfo}>MRN: {patient.mrn}</Text>
             <Text style={styles.patientInfo}>DOB: {patient.dob}</Text>
 
@@ -87,8 +82,8 @@ const PACUScreen = () => {
           >
             <Text style={styles.dischargeLabel}>Ready for Discharge</Text>
             <Checkbox
-              status={patient.isReadyForDischarge ? "checked" : "unchecked"}
-              color={patient.isReadyForDischarge ? "#4CAF50" : "#f44336"} // Change color based on readiness
+              status={patient.readyfordischarge ? "checked" : "unchecked"}
+              color={patient.readyfordischarge ? "#4CAF50" : "#f44336"} // Change color based on readiness
             />
           </TouchableOpacity>
         </View>
