@@ -26,7 +26,6 @@ const convertTo24Hour = (time) => {
 };
 
 const RegionalScreen = () => {
-  // Reduced sample data to 4 patients
   const [consultRequests, setConsultRequests] = useState([
     {
       id: 1,
@@ -74,7 +73,6 @@ const RegionalScreen = () => {
     },
   ]);
 
-  // Anesthesiologists data with availability status
   const [anesthesiologists] = useState([
     { name: "Dr. Lee", available: true },
     { name: "Dr. Adams", available: false },
@@ -84,11 +82,8 @@ const RegionalScreen = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedConsultId, setSelectedConsultId] = useState(null);
-
-  // Sorting state
   const [sortField, setSortField] = useState("time");
 
-  // Function to toggle urgency
   const toggleUrgency = (id) => {
     setConsultRequests((prevConsults) =>
       prevConsults.map((consult) =>
@@ -97,7 +92,6 @@ const RegionalScreen = () => {
     );
   };
 
-  // Function to handle assigned clinician selection
   const selectClinician = (clinician) => {
     setConsultRequests((prevConsults) =>
       prevConsults.map((consult) =>
@@ -109,7 +103,6 @@ const RegionalScreen = () => {
     setModalVisible(false);
   };
 
-  // Function to sort consults based on time or urgency
   const sortConsults = (field) => {
     const sortedConsults = [...consultRequests].sort((a, b) => {
       if (field === "time") {
@@ -127,7 +120,6 @@ const RegionalScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Sorting buttons */}
       <View style={styles.sortingButtons}>
         <TouchableOpacity onPress={() => sortConsults("time")}>
           <Text
@@ -152,7 +144,6 @@ const RegionalScreen = () => {
       </View>
 
       <ScrollView>
-        {/* Render the consult request list */}
         {consultRequests.map((consult) => (
           <View style={styles.consultRow} key={consult.id}>
             <View style={styles.consultDetails}>
@@ -171,7 +162,6 @@ const RegionalScreen = () => {
 
               {/* Assigned Clinician with Modal */}
               <TouchableOpacity
-                style={styles.assignedClinicianBtn}
                 onPress={() => {
                   setSelectedConsultId(consult.id);
                   setModalVisible(true);
@@ -179,14 +169,15 @@ const RegionalScreen = () => {
               >
                 <Text style={styles.consultInfo}>
                   Assigned Clinician:{" "}
-                  {consult.assignedClinician
-                    ? consult.assignedClinician
-                    : "Select"}
+                  {consult.assignedClinician ? (
+                    consult.assignedClinician
+                  ) : (
+                    <Text style={styles.selectText}>Select</Text> // Apply distinct style to "Select"
+                  )}
                 </Text>
               </TouchableOpacity>
             </View>
 
-            {/* Urgent Switch moved to the right side */}
             <View style={styles.urgentSwitch}>
               <Text style={styles.urgentLabel}>Urgent</Text>
               <Switch
@@ -197,7 +188,6 @@ const RegionalScreen = () => {
           </View>
         ))}
 
-        {/* Anesthesiologists Section */}
         <View style={styles.anesthesiologistsSection}>
           <Text style={styles.anesthesiologistsTitle}>Anesthesiologists</Text>
           {anesthesiologists.map((anesthesiologist, index) => (
@@ -216,7 +206,6 @@ const RegionalScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Modal for Selecting Clinician */}
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -316,6 +305,12 @@ const styles = StyleSheet.create({
   modalItemText: { fontSize: 16 },
   closeButton: { marginTop: 20, alignItems: "center" },
   closeButtonText: { color: "#007BFF", fontWeight: "bold" },
+
+  // New style for the "Select" text
+  selectText: {
+    color: "#007BFF", // Distinct blue color for clickable indication
+    fontWeight: "bold",
+  },
 });
 
 export default RegionalScreen;
