@@ -7,9 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Checkbox } from "react-native-paper"; // Import Checkbox from react-native-paper
-import { collection, getDocs, doc, updateDoc, QuerySnapshot } from "firebase/firestore"
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  QuerySnapshot,
+} from "firebase/firestore";
 import { db } from "../services/firebase";
-
 
 const PACUScreen = () => {
   const [pacuPatients, setPacuPatients] = useState([]);
@@ -22,7 +27,7 @@ const PACUScreen = () => {
         const querySnapshot = await getDocs(patientsCollection);
         const patientsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }));
         setPacuPatients(patientsData);
       } catch (error) {
@@ -35,7 +40,9 @@ const PACUScreen = () => {
 
   // Toggle discharge readiness for a patient
   const toggleDischargeReadiness = async (id) => {
-    const currentStatus = pacuPatients.find((patient) => patient.id === id).readyfordischarge;
+    const currentStatus = pacuPatients.find(
+      (patient) => patient.id === id,
+    ).readyfordischarge;
 
     try {
       const patientDocRef = doc(db, "PACU", "People", "Patients", id);

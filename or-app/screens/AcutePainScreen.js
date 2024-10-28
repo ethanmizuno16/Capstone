@@ -1,29 +1,56 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Checkbox } from "react-native-paper";
 
 const AcutePainScreen = () => {
   const [patients, setPatients] = useState([
-    { id: 1, name: "John Doe", mrn: "123456", dob: "Jan 15, 1980", seenToday: false },
-    { id: 2, name: "Jane Smith", mrn: "654321", dob: "Mar 22, 1975", seenToday: false },
-    { id: 3, name: "Michael Brown", mrn: "789123", dob: "Jul 10, 1990", seenToday: true },
+    {
+      id: 1,
+      name: "John Doe",
+      mrn: "123456",
+      dob: "Jan 15, 1980",
+      seenToday: false,
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      mrn: "654321",
+      dob: "Mar 22, 1975",
+      seenToday: false,
+    },
+    {
+      id: 3,
+      name: "Michael Brown",
+      mrn: "789123",
+      dob: "Jul 10, 1990",
+      seenToday: true,
+    },
   ]);
 
   const [newConsults, setNewConsults] = useState([
-    { id: 1, name: "Emily Johnson", mrn: "456789", dob: "Oct 5, 1982", procedure: "Nerve Block" },
-    { id: 2, name: "William Lee", mrn: "987654", dob: "Dec 19, 1987", procedure: "Epidural Injection" },
+    {
+      id: 1,
+      name: "Emily Johnson",
+      mrn: "456789",
+      dob: "Oct 5, 1982",
+      procedure: "Nerve Block",
+    },
+    {
+      id: 2,
+      name: "William Lee",
+      mrn: "987654",
+      dob: "Dec 19, 1987",
+      procedure: "Epidural Injection",
+    },
   ]);
 
   const toggleSeenToday = (id) => {
     setPatients((prevPatients) =>
       prevPatients.map((patient) =>
-        patient.id === id ? { ...patient, seenToday: !patient.seenToday } : patient
-      )
+        patient.id === id
+          ? { ...patient, seenToday: !patient.seenToday }
+          : patient,
+      ),
     );
   };
 
@@ -54,7 +81,9 @@ const AcutePainScreen = () => {
           <Text style={styles.consultName}>{consult.name}</Text>
           <Text style={styles.consultInfo}>MRN: {consult.mrn}</Text>
           <Text style={styles.consultInfo}>DOB: {consult.dob}</Text>
-          <Text style={styles.consultProcedure}>Procedure: {consult.procedure}</Text>
+          <Text style={styles.consultProcedure}>
+            Procedure: {consult.procedure}
+          </Text>
         </View>
       ))}
     </ScrollView>
