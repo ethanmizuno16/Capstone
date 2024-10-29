@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Checkbox } from 'react-native-paper';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { Checkbox } from "react-native-paper";
 
 const EpiduralsTab = () => {
   const [requests, setRequests] = useState([
     {
       id: 1,
-      name: 'Emily Johnson',
-      procedure: 'Epidural',
-      time: '10:00 AM',
-      requestingPhysician: 'Dr. White',
+      name: "Emily Johnson",
+      procedure: "Epidural",
+      time: "10:00 AM",
+      requestingPhysician: "Dr. White",
       completed: false,
     },
     {
       id: 2,
-      name: 'Michael Brown',
-      procedure: 'Epidural',
-      time: '12:00 PM',
-      requestingPhysician: 'Dr. Green',
+      name: "Michael Brown",
+      procedure: "Epidural",
+      time: "12:00 PM",
+      requestingPhysician: "Dr. Green",
       completed: false,
     },
   ]);
@@ -25,8 +31,10 @@ const EpiduralsTab = () => {
   const toggleCompletion = (id) => {
     setRequests((prevRequests) =>
       prevRequests.map((request) =>
-        request.id === id ? { ...request, completed: !request.completed } : request
-      )
+        request.id === id
+          ? { ...request, completed: !request.completed }
+          : request,
+      ),
     );
   };
 
@@ -39,10 +47,12 @@ const EpiduralsTab = () => {
             <Text style={styles.name}>{request.name}</Text>
             <Text style={styles.details}>Procedure: {request.procedure}</Text>
             <Text style={styles.details}>Time: {request.time}</Text>
-            <Text style={styles.details}>Requesting Physician: {request.requestingPhysician}</Text>
+            <Text style={styles.details}>
+              Requesting Physician: {request.requestingPhysician}
+            </Text>
           </View>
           <Checkbox
-            status={request.completed ? 'checked' : 'unchecked'}
+            status={request.completed ? "checked" : "unchecked"}
             onPress={() => toggleCompletion(request.id)}
           />
         </View>
@@ -58,25 +68,25 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   requestItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 12,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     marginVertical: 6,
     borderRadius: 8,
   },
   name: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   details: {
     fontSize: 14,
-    color: '#555',
+    color: "#555",
   },
 });
 

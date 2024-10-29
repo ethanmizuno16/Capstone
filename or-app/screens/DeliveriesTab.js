@@ -1,12 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { useSurgery } from '../context/SurgeryContext';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+import { useSurgery } from "../context/SurgeryContext";
 
 const DeliveriesTab = ({ navigation }) => {
   const { orData, getSurgerySteps } = useSurgery();
-  
+
   // Filter OR data to only show delivery-related cases (e.g., C-Sections)
-  const deliveryCases = orData.filter((or) => or.surgeryType === 'Cesarean Section');
+  const deliveryCases = orData.filter(
+    (or) => or.surgeryType === "Cesarean Section",
+  );
 
   const getCompletionPercentage = (surgeryType, currentStep) => {
     const steps = getSurgerySteps(surgeryType);
@@ -23,13 +31,18 @@ const DeliveriesTab = ({ navigation }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('DetailedOR', { orId: item.id })}
+            onPress={() => navigation.navigate("DetailedOR", { orId: item.id })}
           >
             <Text style={styles.name}>Patient: {item.id}</Text>
             <Text style={styles.details}>Surgeon: {item.surgeonName}</Text>
             <Text style={styles.details}>Anesthesiologist: {item.raName}</Text>
             <Text style={styles.details}>
-              Progress: {getCompletionPercentage(item.surgeryType, item.surgeryStage).toFixed(0)}% Complete
+              Progress:{" "}
+              {getCompletionPercentage(
+                item.surgeryType,
+                item.surgeryStage,
+              ).toFixed(0)}
+              % Complete
             </Text>
           </TouchableOpacity>
         )}
@@ -45,22 +58,22 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   card: {
     padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     marginVertical: 8,
     borderRadius: 8,
   },
   name: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   details: {
     fontSize: 14,
-    color: '#555',
+    color: "#555",
   },
 });
 

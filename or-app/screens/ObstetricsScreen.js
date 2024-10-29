@@ -1,20 +1,20 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
-import EpiduralsTab from './EpiduralsTab';
-import DeliveriesTab from './DeliveriesTab';
-import { Ionicons } from '@expo/vector-icons';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Text } from "react-native";
+import EpiduralsTab from "./EpiduralsTab";
+import DeliveriesTab from "./DeliveriesTab";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
 const ObstetricsScreen = () => (
   <Tab.Navigator
     screenOptions={{
-      tabBarActiveTintColor: '#0066CC', // Active tab color
-      tabBarInactiveTintColor: '#8e8e93', // Inactive tab color
+      tabBarActiveTintColor: "#0066CC", // Active tab color
+      tabBarInactiveTintColor: "#8e8e93", // Inactive tab color
       tabBarLabelStyle: {
         fontSize: 16, // Larger font size
-        fontWeight: 'bold',
+        fontWeight: "bold",
         paddingBottom: 4, // Adds some spacing between the label and the icon
       },
       tabBarStyle: {
@@ -24,21 +24,25 @@ const ObstetricsScreen = () => (
       },
     }}
   >
-    <Tab.Screen 
-      name="Epidurals" 
-      component={EpiduralsTab} 
+    <Tab.Screen
+      name="Epidurals"
+      component={EpiduralsTab}
       options={{
-        tabBarLabel: 'Epidurals',
-        tabBarIcon: ({ color, size }) => <Ionicons name="medkit" color={color} size={size + 5} />, // Icon with a slightly larger size
-      }} 
+        tabBarLabel: "Epidurals",
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="medkit" color={color} size={size + 5} />
+        ), // Icon with a slightly larger size
+      }}
     />
-    <Tab.Screen 
-      name="Deliveries" 
-      component={DeliveriesTab} 
+    <Tab.Screen
+      name="Deliveries"
+      component={DeliveriesTab}
       options={{
-        tabBarLabel: 'Deliveries',
-        tabBarIcon: ({ color, size }) => <Ionicons name="body" color={color} size={size + 5} />, // Icon with a slightly larger size
-      }} 
+        tabBarLabel: "Deliveries",
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="body" color={color} size={size + 5} />
+        ), // Icon with a slightly larger size
+      }}
     />
   </Tab.Navigator>
 );
