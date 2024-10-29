@@ -6,15 +6,10 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { Checkbox } from "react-native-paper"; // Import Checkbox from react-native-paper
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  QuerySnapshot,
-} from "firebase/firestore";
+import { Checkbox } from "react-native-paper";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { Colors, Fonts, Spacing, Borders } from "../Theme"; // Import theme variables
 
 const PACUScreen = () => {
   const [pacuPatients, setPacuPatients] = useState([]);
@@ -31,7 +26,7 @@ const PACUScreen = () => {
         }));
         setPacuPatients(patientsData);
       } catch (error) {
-        console.error("Error fetching PACU patients data: ", error);
+        console.error("Error fetching PACU patients data:", error);
       }
     };
 
@@ -64,25 +59,17 @@ const PACUScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Title for PACU patients */}
       <Text style={styles.tableTitle}>PACU Patients</Text>
-
-      {/* PACU patients table */}
       {pacuPatients.map((patient) => (
         <View style={styles.patientRow} key={patient.id}>
-          {/* Patient Details */}
           <View style={styles.patientDetails}>
             <Text style={styles.patientName}>{patient.name}</Text>
             <Text style={styles.patientInfo}>MRN: {patient.mrn}</Text>
             <Text style={styles.patientInfo}>DOB: {patient.dob}</Text>
-
-            {/* New: Anesthesiologist Details */}
             <Text style={styles.anesthesiaInfo}>
               Anesthesiologist: {patient.anesthesiologist} ({patient.shift})
             </Text>
           </View>
-
-          {/* Discharge Checkbox */}
           <TouchableOpacity
             style={styles.checkboxContainer}
             onPress={() => toggleDischargeReadiness(patient.id)}
@@ -90,7 +77,7 @@ const PACUScreen = () => {
             <Text style={styles.dischargeLabel}>Ready for Discharge</Text>
             <Checkbox
               status={patient.readyfordischarge ? "checked" : "unchecked"}
-              color={patient.readyfordischarge ? "#4CAF50" : "#f44336"} // Change color based on readiness
+              color={patient.readyfordischarge ? Colors.success : Colors.error}
             />
           </TouchableOpacity>
         </View>
@@ -99,67 +86,69 @@ const PACUScreen = () => {
   );
 };
 
-// Styles for the screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa", // Light background for the whole screen
-    padding: 16,
+    backgroundColor: Colors.background,
+    padding: Spacing.medium,
   },
   tableTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 15,
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.small,
     textAlign: "center",
-    color: "#333",
   },
   patientRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 12, // More rounded for modern look
-    shadowColor: "#000",
+    backgroundColor: Colors.cardBackground,
+    padding: Spacing.medium,
+    marginBottom: Spacing.small,
+    borderRadius: Borders.radius.medium,
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    elevation: 4, // Slight elevation for a card effect
+    elevation: 4,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: Colors.border,
   },
   patientDetails: {
     flex: 2,
-    paddingRight: 10,
+    paddingRight: Spacing.small,
   },
   patientName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4,
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.xs,
   },
   patientInfo: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 2,
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.regular,
+    color: Colors.textLight,
+    marginBottom: Spacing.xs,
   },
   anesthesiaInfo: {
-    fontSize: 14,
-    color: "#007bff", // Make anesthesiologist information blue for visibility
-    marginTop: 5,
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.regular,
+    color: Colors.secondary,
+    marginTop: Spacing.xs,
   },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f3f4",
-    padding: 8,
-    borderRadius: 8,
+    backgroundColor: Colors.lightBackground, // Optional lighter background
+    padding: Spacing.small,
+    borderRadius: Borders.radius.small,
   },
   dischargeLabel: {
-    fontSize: 14,
-    marginRight: 8,
-    color: "#333",
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.bold,
+    marginRight: Spacing.xs,
+    color: Colors.text,
   },
 });
 

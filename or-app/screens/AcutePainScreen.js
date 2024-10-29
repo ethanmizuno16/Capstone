@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Checkbox } from "react-native-paper";
+import {
+  Colors,
+  Fonts,
+  Spacing,
+  Borders,
+  Shadows,
+  ButtonStyles,
+} from "../Theme";
 
 const AcutePainScreen = () => {
   const [patients, setPatients] = useState([
@@ -69,7 +77,7 @@ const AcutePainScreen = () => {
             <Checkbox
               status={patient.seenToday ? "checked" : "unchecked"}
               onPress={() => toggleSeenToday(patient.id)}
-              color="#007BFF" // Consistent checkbox color
+              color={Colors.primary} // Consistent checkbox color from theme
             />
           </View>
         </View>
@@ -93,67 +101,69 @@ const AcutePainScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    backgroundColor: "#f5f5f5",
+    padding: Spacing.medium,
+    backgroundColor: Colors.background,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333", // Consistent title color
-    marginBottom: 10,
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    color: Colors.text,
+    marginBottom: Spacing.small,
   },
   patientRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    elevation: 3,
+    backgroundColor: Colors.cardBackground,
+    padding: Spacing.medium,
+    borderRadius: Borders.radius.medium,
+    marginBottom: Spacing.small,
+    ...Shadows, // Apply shadow styles from theme
   },
   patientDetails: {
     flex: 1,
   },
   patientName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#4B2E83", // Primary color for names
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
   },
   patientInfo: {
-    fontSize: 14,
-    color: "#666", // Secondary color for info text
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.regular,
+    color: Colors.textLight,
   },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   checkboxLabel: {
-    fontSize: 14,
-    marginRight: 10,
-    color: "#333",
-    fontWeight: "bold",
+    fontSize: Fonts.size.small,
+    marginRight: Spacing.small,
+    color: Colors.text,
+    fontFamily: Fonts.family.bold,
   },
   consultRow: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    elevation: 3,
+    backgroundColor: Colors.cardBackground,
+    padding: Spacing.medium,
+    borderRadius: Borders.radius.medium,
+    marginBottom: Spacing.small,
+    ...Shadows, // Apply shadow styles from theme
   },
   consultName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#4B2E83",
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
   },
   consultInfo: {
-    fontSize: 14,
-    color: "#666",
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.regular,
+    color: Colors.textLight,
   },
   consultProcedure: {
-    fontSize: 14,
-    color: "#007BFF",
-    fontStyle: "italic",
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.italic,
+    color: Colors.secondary,
   },
 });
 

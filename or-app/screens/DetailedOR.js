@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"; // Import React and hooks
+import { Colors, Fonts, Spacing, Borders } from "../Theme"; // Import theme variables
 import {
   View,
   Text,
@@ -241,22 +242,22 @@ const DetailedOR = ({ route, navigation }) => {
   };
 
   const chartConfig = {
-    backgroundColor: "#e26a00",
-    backgroundGradientFrom: "#fb8c00",
-    backgroundGradientTo: "#ffa726",
-    decimalPlaces: 0, // No decimal places in values
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // White color for chart lines
+    backgroundColor: Colors.secondary,
+    backgroundGradientFrom: Colors.secondary,
+    backgroundGradientTo: Colors.highlight,
+    decimalPlaces: 0,
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     style: {
-      borderRadius: 16,
+      borderRadius: Borders.radius.medium,
     },
     propsForDots: {
       r: "6",
       strokeWidth: "2",
-      stroke: "#ffa726",
+      stroke: Colors.highlight,
     },
     yAxisLabel: "",
-    yAxisSuffix: " BPM", // Label suffix for y-axis
+    yAxisSuffix: " BPM",
   };
 
   return (
@@ -343,7 +344,7 @@ const DetailedOR = ({ route, navigation }) => {
 // Styles for the component
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: Colors.background,
   },
   container: {
     flex: 1,
@@ -351,57 +352,60 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   detailBox: {
-    margin: 10,
-    padding: 20,
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
+    margin: Spacing.small,
+    padding: Spacing.medium,
+    backgroundColor: Colors.cardBackground,
+    borderRadius: Borders.radius.medium,
     width: "90%",
   },
   title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    marginBottom: Spacing.small,
   },
   detailText: {
-    fontSize: 18,
-    marginBottom: 5,
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.regular,
+    marginBottom: Spacing.xs,
   },
   largeBox: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 10,
-    padding: 20,
-    marginVertical: 10,
+    backgroundColor: Colors.primary, // Make it stand out with primary color or another distinct color
+    borderRadius: Borders.radius.medium,
+    padding: Spacing.medium,
+    marginVertical: Spacing.small,
     width: "90%",
+    alignItems: "center", // Center the button text
   },
   anesBox: {
-    backgroundColor: "lightpink",
-    borderRadius: 10,
-    padding: 20,
+    backgroundColor: Colors.secondaryLight,
+    borderRadius: Borders.radius.medium,
+    padding: Spacing.medium,
     width: "90%",
-    marginVertical: 10,
+    marginVertical: Spacing.small,
     alignItems: "flex-start",
   },
   vital: {
-    fontWeight: "bold",
-    color: "#007bff",
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
   },
   boxTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.cardBackground, // Use a contrasting color for text within the button
+    marginBottom: Spacing.small,
   },
   chartContainer: {
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: Spacing.small,
   },
   chartTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    marginBottom: Spacing.small,
   },
   chartAxisXLabel: {
-    fontSize: 16,
-    marginTop: 10,
+    fontSize: Fonts.size.small,
+    marginTop: Spacing.xs,
   },
 });
 

@@ -9,6 +9,7 @@ import {
   Modal,
   FlatList,
 } from "react-native";
+import { Colors, Fonts, Spacing, Borders } from "../Theme"; // Import theme variables
 
 const convertTo24Hour = (time) => {
   const [hourMinute, modifier] = time.split(" ");
@@ -73,8 +74,8 @@ const RegionalScreen = () => {
   const [anesthesiologists] = useState([
     { name: "Dr. Lee", available: true },
     { name: "Dr. Adams", available: false },
-    { name: "Dr. Smith", available: true },
-    { name: "Dr. Patel", available: false },
+    { name: "Dr. Jones", available: true },
+    { name: "Dr. Smith", available: false },
   ]);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -117,7 +118,6 @@ const RegionalScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Sorting buttons */}
       <View style={styles.sortingButtons}>
         <TouchableOpacity onPress={() => sortConsults("time")}>
           <Text
@@ -142,7 +142,6 @@ const RegionalScreen = () => {
       </View>
 
       <ScrollView>
-        {/* Render the consult request list */}
         {consultRequests.map((consult) => (
           <View style={styles.consultRow} key={consult.id}>
             <View style={styles.consultDetails}>
@@ -158,8 +157,6 @@ const RegionalScreen = () => {
               <Text style={styles.consultInfo}>
                 Requesting Physician: {consult.requestingPhysician}
               </Text>
-
-              {/* Assigned Clinician with Modal */}
               <TouchableOpacity
                 style={styles.assignedClinicianBtn}
                 onPress={() => {
@@ -172,26 +169,25 @@ const RegionalScreen = () => {
                   {consult.assignedClinician ? (
                     consult.assignedClinician
                   ) : (
-                    <Text style={styles.selectText}>Select</Text> // Style for "Select" button text
+                    <Text style={styles.selectText}>Select</Text>
                   )}
                 </Text>
               </TouchableOpacity>
             </View>
-
-            {/* Urgent Switch */}
             <View style={styles.urgentSwitch}>
               <Text style={styles.urgentLabel}>Urgent</Text>
               <Switch
                 value={consult.urgent}
                 onValueChange={() => toggleUrgency(consult.id)}
-                trackColor={{ false: "#ddd", true: "#007BFF" }}
-                thumbColor={consult.urgent ? "#007BFF" : "#f4f3f4"}
+                trackColor={{ false: Colors.border, true: Colors.secondary }}
+                thumbColor={
+                  consult.urgent ? Colors.secondary : Colors.lightBackground
+                }
               />
             </View>
           </View>
         ))}
 
-        {/* Anesthesiologists Section */}
         <View style={styles.anesthesiologistsSection}>
           <Text style={styles.anesthesiologistsTitle}>Anesthesiologists</Text>
           {anesthesiologists.map((anesthesiologist, index) => (
@@ -210,7 +206,6 @@ const RegionalScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Modal for Selecting Clinician */}
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -226,7 +221,9 @@ const RegionalScreen = () => {
                 <TouchableOpacity
                   style={[
                     styles.modalItem,
-                    !item.available && { backgroundColor: "#f0f0f0" },
+                    !item.available && {
+                      backgroundColor: Colors.lightBackground,
+                    },
                   ]}
                   onPress={() => item.available && selectClinician(item.name)}
                   disabled={!item.available}
@@ -234,7 +231,7 @@ const RegionalScreen = () => {
                   <Text
                     style={[
                       styles.modalItemText,
-                      !item.available && { color: "#888" },
+                      !item.available && { color: Colors.textLight },
                     ]}
                   >
                     {item.name} {item.available ? "" : "(Busy)"}
@@ -257,43 +254,63 @@ const RegionalScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: "#f5f5f5" },
+  container: {
+    flex: 1,
+    padding: Spacing.medium,
+    backgroundColor: Colors.background,
+  },
   consultRow: {
-    backgroundColor: "#fff",
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 10,
+    backgroundColor: Colors.cardBackground,
+    padding: Spacing.medium,
+    marginVertical: Spacing.small,
+    borderRadius: Borders.radius.medium,
     elevation: 3,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   consultDetails: { flex: 1 },
-  consultName: { fontSize: 18, fontWeight: "bold", color: "#4B2E83" },
-  consultInfo: { fontSize: 14, color: "#666" },
+  consultName: {
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
+  },
+  consultInfo: {
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.regular,
+    color: Colors.textLight,
+  },
   urgentSwitch: {
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
   },
-  urgentLabel: { marginRight: 10, fontWeight: "bold", color: "#333" },
+  urgentLabel: {
+    marginRight: Spacing.xs,
+    fontWeight: "bold",
+    color: Colors.text,
+  },
   sortingButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 15,
+    marginBottom: Spacing.medium,
   },
-  sortButton: { fontSize: 16, color: "#007BFF", fontWeight: "bold" },
+  sortButton: {
+    fontSize: Fonts.size.small,
+    color: Colors.secondary,
+    fontFamily: Fonts.family.bold,
+  },
   activeSortButton: { textDecorationLine: "underline" },
-  anesthesiologistsSection: { marginTop: 20 },
+  anesthesiologistsSection: { marginTop: Spacing.large },
   anesthesiologistsTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4B2E83",
-    marginBottom: 10,
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.small,
   },
-  anesthesiologistRow: { paddingVertical: 5 },
-  anesthesiologistName: { fontSize: 16 },
-  available: { color: "green" },
-  busy: { color: "red" },
+  anesthesiologistRow: { paddingVertical: Spacing.xs },
+  anesthesiologistName: { fontSize: Fonts.size.small },
+  available: { color: Colors.success },
+  busy: { color: Colors.error },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -302,21 +319,25 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: 300,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
+    backgroundColor: Colors.cardBackground,
+    borderRadius: Borders.radius.medium,
+    padding: Spacing.medium,
   },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 20 },
-  modalItem: { padding: 15, borderBottomWidth: 1, borderColor: "#ddd" },
-  modalItemText: { fontSize: 16 },
-  closeButton: { marginTop: 20, alignItems: "center" },
-  closeButtonText: { color: "#007BFF", fontWeight: "bold" },
+  modalTitle: {
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    marginBottom: Spacing.medium,
+  },
+  modalItem: {
+    padding: Spacing.small,
+    borderBottomWidth: 1,
+    borderColor: Colors.border,
+  },
+  modalItemText: { fontSize: Fonts.size.small },
+  closeButton: { marginTop: Spacing.medium, alignItems: "center" },
+  closeButtonText: { color: Colors.secondary, fontFamily: Fonts.family.bold },
 
-  // New style for the "Select" text
-  selectText: {
-    color: "#007BFF", // Distinct blue color for clickable indication
-    fontWeight: "bold",
-  },
+  selectText: { color: Colors.secondary, fontFamily: Fonts.family.bold },
 });
 
 export default RegionalScreen;

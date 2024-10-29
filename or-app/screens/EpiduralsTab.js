@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
+import { Colors, Fonts, Spacing, Borders } from "../Theme"; // Import theme variables
 
 const EpiduralsTab = () => {
   const [requests, setRequests] = useState([
@@ -54,6 +55,7 @@ const EpiduralsTab = () => {
           <Checkbox
             status={request.completed ? "checked" : "unchecked"}
             onPress={() => toggleCompletion(request.id)}
+            color={Colors.primary} // Use primary color from theme for checked color
           />
         </View>
       ))}
@@ -64,29 +66,38 @@ const EpiduralsTab = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: Spacing.medium,
+    backgroundColor: Colors.background,
   },
   header: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.small,
   },
   requestItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 12,
-    backgroundColor: "#f9f9f9",
-    marginVertical: 6,
-    borderRadius: 8,
+    padding: Spacing.medium,
+    backgroundColor: Colors.cardBackground,
+    marginVertical: Spacing.xs,
+    borderRadius: Borders.radius.medium,
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   name: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
   },
   details: {
-    fontSize: 14,
-    color: "#555",
+    fontSize: Fonts.size.small,
+    fontFamily: Fonts.family.regular,
+    color: Colors.textLight,
   },
 });
 
