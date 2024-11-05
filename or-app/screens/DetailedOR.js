@@ -80,9 +80,12 @@ const DetailedOR = ({ route, navigation }) => {
 
   const handleSubmitRequest = () => {
     const selectedRequests = Object.keys(equipmentRequests).filter(
-      (item) => equipmentRequests[item]
+      (item) => equipmentRequests[item],
     );
-    Alert.alert("Request Submitted", `Equipment requested: ${selectedRequests.join(", ")}`);
+    Alert.alert(
+      "Request Submitted",
+      `Equipment requested: ${selectedRequests.join(", ")}`,
+    );
     setIsTechModalVisible(false); // Close the modal after submitting
   };
 
@@ -170,7 +173,10 @@ const DetailedOR = ({ route, navigation }) => {
                 <Text style={styles.buttonText}>Submit Request</Text>
               </TouchableOpacity>
 
-              <Button title="Close" onPress={() => setIsTechModalVisible(false)} />
+              <Button
+                title="Close"
+                onPress={() => setIsTechModalVisible(false)}
+              />
             </View>
           </View>
         </Modal>
