@@ -7,12 +7,10 @@ import {
   Button,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
 } from "react-native";
 import casesData from "../data/cases_filtered_json.json";
 import surgeries from "../data/surgeries.json";
 import { useSurgery } from "../context/SurgeryContext";
-import { LineChart } from "react-native-chart-kit";
 import VitalsDataSection from "../components/VitalsDataSection"; // Import the VitalsDataSection component
 
 const selectRandomCase = (cases) => {
@@ -57,30 +55,6 @@ const DetailedOR = ({ route, navigation }) => {
     });
     setOperationStartTime(opStartString);
   }, [surgeryInfo.opstart]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [chartData, setChartData] = useState([]);
-  const screenWidth = Dimensions.get("window").width;
-
-  const heartRateChartData = {
-    labels: chartData.slice(-10).map((_, index) => (index + 1).toString()), // Creates labels for each of the 10 points
-    datasets: [
-      {
-        data: chartData.slice(-10), // Only the last 10 values
-      },
-    ],
-  };
-
-  const chartConfig = {
-    backgroundColor: Colors.secondary,
-    backgroundGradientFrom: Colors.secondary,
-    backgroundGradientTo: Colors.highlight,
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {
-      borderRadius: Borders.radius.medium,
-    },
-  };
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -171,20 +145,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF", // White text for contrast
     fontSize: Fonts.size.medium,
     fontFamily: Fonts.family.bold,
-  },
-
-  chartContainer: {
-    alignItems: "center",
-    marginVertical: Spacing.small,
-  },
-  chartTitle: {
-    fontSize: Fonts.size.large,
-    fontFamily: Fonts.family.bold,
-    marginBottom: Spacing.small,
-  },
-  chartAxisXLabel: {
-    fontSize: Fonts.size.small,
-    marginTop: Spacing.xs,
   },
 });
 
