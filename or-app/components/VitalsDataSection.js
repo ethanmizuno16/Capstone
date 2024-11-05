@@ -33,12 +33,17 @@ const VitalsDataSection = () => {
 
   const [selectedVital, setSelectedVital] = useState("heartRate");
   const [chartData, setChartData] = useState(
-    sampleVitals[selectedVital].slice(-15),
+    sampleVitals[selectedVital].slice(-10), // Only the last 10 values initially
   );
 
   useEffect(() => {
     let index = 0;
+
+    // Reset chartData to the last 10 values of the selected vital
+    setChartData(sampleVitals[selectedVital].slice(-10));
+
     const intervalId = setInterval(() => {
+      // Update current vitals
       setCurrentVitals({
         heartRate:
           sampleVitals.heartRate[index % sampleVitals.heartRate.length],
@@ -58,12 +63,21 @@ const VitalsDataSection = () => {
           ],
       });
 
-      setChartData(sampleVitals[selectedVital].slice(-15));
+      // Update chart data dynamically
+      setChartData((prevChartData) => {
+        const newValue =
+          sampleVitals[selectedVital][
+            index % sampleVitals[selectedVital].length
+          ];
+        const updatedData = [...prevChartData, newValue].slice(-10); // Keep only the last 10 values
+        return updatedData;
+      });
+
       index += 1;
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [selectedVital]);
+  }, [selectedVital]); // Reset data on new vital selection
 
   // Function to capitalize words for button labels
   const formatLabel = (label) =>
@@ -131,35 +145,37 @@ const VitalsDataSection = () => {
           ))}
       </View>
 
-      {/* Enhanced Chart */}
+      {/* Centered Chart */}
       <Text style={styles.chartTitle}>
         {formatLabel(selectedVital)} Over Time
       </Text>
-      <LineChart
-        data={{
-          labels: Array.from({ length: 15 }, (_, i) => (i + 1).toString()),
-          datasets: [{ data: chartData.map((value) => parseFloat(value)) }],
-        }}
-        width={Dimensions.get("window").width * 0.9}
-        height={220}
-        chartConfig={{
-          backgroundGradientFrom: "#ffffff",
-          backgroundGradientTo: "#f0f0f0",
-          color: (opacity = 1) => `rgba(34, 128, 176, ${opacity})`, // Blue line color
-          labelColor: () => Colors.text,
-          strokeWidth: 3,
-          propsForDots: {
-            r: "5",
-            strokeWidth: "2",
-            stroke: "#2280B0",
-          },
-          propsForBackgroundLines: {
-            stroke: "#e0e0e0",
-          },
-        }}
-        bezier
-        style={styles.chart}
-      />
+      <View style={styles.chartContainer}>
+        <LineChart
+          data={{
+            labels: Array.from({ length: 10 }, (_, i) => (i + 1).toString()), // 10 labels for 10 points
+            datasets: [{ data: chartData.map((value) => parseFloat(value)) }],
+          }}
+          width={Dimensions.get("window").width * 0.85} // Set width to 85% of the screen for centering
+          height={220}
+          chartConfig={{
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#f0f0f0",
+            color: (opacity = 1) => `rgba(34, 128, 176, ${opacity})`, // Blue line color
+            labelColor: () => Colors.text,
+            strokeWidth: 3,
+            propsForDots: {
+              r: "5",
+              strokeWidth: "2",
+              stroke: "#2280B0",
+            },
+            propsForBackgroundLines: {
+              stroke: "#e0e0e0",
+            },
+          }}
+          bezier
+          style={styles.chart}
+        />
+      </View>
     </View>
   );
 };
@@ -234,8 +250,11 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.small,
     textTransform: "capitalize",
   },
-  chart: {
+  chartContainer: {
+    alignItems: "center", // Centers the chart within this container
     marginTop: Spacing.medium,
+  },
+  chart: {
     borderRadius: 12,
   },
 });

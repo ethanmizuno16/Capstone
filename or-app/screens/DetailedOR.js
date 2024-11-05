@@ -10,7 +10,6 @@ import {
   Dimensions,
 } from "react-native";
 import casesData from "../data/cases_filtered_json.json";
-import tracksData from "../data/tracks_info_filtered_json.json";
 import surgeries from "../data/surgeries.json";
 import { useSurgery } from "../context/SurgeryContext";
 import { LineChart } from "react-native-chart-kit";
@@ -64,10 +63,10 @@ const DetailedOR = ({ route, navigation }) => {
   const screenWidth = Dimensions.get("window").width;
 
   const heartRateChartData = {
-    labels: chartData.map((_, index) => index.toString()),
+    labels: chartData.slice(-10).map((_, index) => (index + 1).toString()), // Creates labels for each of the 10 points
     datasets: [
       {
-        data: chartData.filter((val) => !isNaN(val)),
+        data: chartData.slice(-10), // Only the last 10 values
       },
     ],
   };
@@ -76,19 +75,11 @@ const DetailedOR = ({ route, navigation }) => {
     backgroundColor: Colors.secondary,
     backgroundGradientFrom: Colors.secondary,
     backgroundGradientTo: Colors.highlight,
-    decimalPlaces: 0,
     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     style: {
       borderRadius: Borders.radius.medium,
     },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: Colors.highlight,
-    },
-    yAxisLabel: "",
-    yAxisSuffix: " BPM",
   };
 
   return (
@@ -100,8 +91,8 @@ const DetailedOR = ({ route, navigation }) => {
           <Text style={styles.detailText}>Surgeon Name: {or.surgeonName}</Text>
           <Text style={styles.detailText}>
             {or.replacement
-              ? `Anesthesia: ${or.raName} (${or.shift}) —> ${or.replacement.name} (${or.replacement.shift})`
-              : `Anesthesia: ${or.raName} (${or.shift}) —> finish case`}
+              ? `Anesthesia: ${or.raName} (${or.shift}) → ${or.replacement.name} (${or.replacement.shift})`
+              : `Anesthesia: ${or.raName} (${or.shift}) → finish case`}
           </Text>
           <Text style={styles.detailText}>Surgery Type: {or.surgeryType}</Text>
           <Text style={styles.detailText}>
@@ -119,13 +110,15 @@ const DetailedOR = ({ route, navigation }) => {
         {/* Vitals Section */}
         <VitalsDataSection />
 
-        {/* Navigate to Push Notifications */}
-        <TouchableOpacity
-          style={styles.largeBox}
-          onPress={() => navigation.navigate("PushNotifications", { or: or })}
-        >
-          <Text style={styles.boxTitle}>Messaging</Text>
-        </TouchableOpacity>
+        {/* Messaging Button */}
+        <View style={{ paddingHorizontal: Spacing.medium }}>
+          <TouchableOpacity
+            style={styles.messagingButton}
+            onPress={() => navigation.navigate("PushNotifications", { or: or })}
+          >
+            <Text style={styles.buttonText}>Messaging</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Button to go back to the previous screen */}
         <Button title="Go Back" onPress={() => navigation.goBack()} />
@@ -141,34 +134,45 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: Colors.background,
+    padding: Spacing.medium,
   },
   detailBox: {
-    margin: Spacing.small,
-    padding: Spacing.medium,
     backgroundColor: Colors.cardBackground,
     borderRadius: Borders.radius.medium,
-    width: "90%",
+    padding: Spacing.medium,
+    marginVertical: Spacing.small,
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   title: {
     fontSize: Fonts.size.large,
     fontFamily: Fonts.family.bold,
+    color: Colors.primary,
     marginBottom: Spacing.small,
   },
   detailText: {
     fontSize: Fonts.size.medium,
     fontFamily: Fonts.family.regular,
+    color: Colors.text,
     marginBottom: Spacing.xs,
   },
-  largeBox: {
-    backgroundColor: Colors.primary,
+  messagingButton: {
+    backgroundColor: Colors.primary || "#007AFF", // Adjust color if needed
     borderRadius: Borders.radius.medium,
-    padding: Spacing.medium,
-    marginVertical: Spacing.small,
-    width: "90%",
+    paddingVertical: Spacing.medium, // Vertical padding for height
+    marginHorizontal: Spacing.medium, // Side margins for spacing within container
     alignItems: "center",
+    justifyContent: "center",
   },
+  buttonText: {
+    color: "#FFFFFF", // White text for contrast
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+  },
+
   chartContainer: {
     alignItems: "center",
     marginVertical: Spacing.small,
