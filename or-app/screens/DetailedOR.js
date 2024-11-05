@@ -1,32 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { Colors, Fonts, Spacing, Borders } from "../Theme";
 import {
   View,
   Text,
-  StyleSheet,
-  Button,
-  ScrollView,
   TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Button,
+  Modal,
+  Alert,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons"; // Import icons for custom checkbox
+import { Colors, Fonts, Spacing, Borders } from "../Theme";
 import casesData from "../data/cases_filtered_json.json";
 import surgeries from "../data/surgeries.json";
 import { useSurgery } from "../context/SurgeryContext";
-import VitalsDataSection from "../components/VitalsDataSection"; // Import the VitalsDataSection component
+import VitalsDataSection from "../components/VitalsDataSection";
+
+// Custom checkbox component
+const CustomCheckBox = ({ isChecked, onPress, label }) => (
+  <TouchableOpacity style={styles.checkBoxItem} onPress={onPress}>
+    <MaterialIcons
+      name={isChecked ? "check-box" : "check-box-outline-blank"}
+      size={24}
+      color={Colors.primary}
+    />
+    <Text style={styles.checkBoxLabel}>{label}</Text>
+  </TouchableOpacity>
+);
 
 const selectRandomCase = (cases) => {
   const randomIndex = Math.floor(Math.random() * cases.length);
   return cases[randomIndex];
 };
 
-// Main DetailedOR component
 const DetailedOR = ({ route, navigation }) => {
   const { orId } = route.params;
   const { orData, getSurgerySteps } = useSurgery();
   const or = orData.find((o) => o.id === orId);
 
-  if (!or) {
-    return <Text>No data available for this OR.</Text>;
-  }
+  const [isTechModalVisible, setIsTechModalVisible] = useState(false);
+  const [equipmentRequests, setEquipmentRequests] = useState({
+    arterialLine: false,
+    glidescope: false,
+    POCUS: false,
+    vascularUltrasound: false,
+    CO2Absorber: false,
+  });
 
   const steps = getSurgerySteps(or.surgeryType);
   const currentStepIndex = steps.indexOf(or.surgeryStage);
@@ -56,6 +75,17 @@ const DetailedOR = ({ route, navigation }) => {
     setOperationStartTime(opStartString);
   }, [surgeryInfo.opstart]);
 
+  const formatLabel = (label) =>
+    label.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+
+  const handleSubmitRequest = () => {
+    const selectedRequests = Object.keys(equipmentRequests).filter(
+      (item) => equipmentRequests[item]
+    );
+    Alert.alert("Request Submitted", `Equipment requested: ${selectedRequests.join(", ")}`);
+    setIsTechModalVisible(false); // Close the modal after submitting
+  };
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
@@ -84,24 +114,73 @@ const DetailedOR = ({ route, navigation }) => {
         {/* Vitals Section */}
         <VitalsDataSection />
 
-        {/* Messaging Button */}
-        <View style={{ paddingHorizontal: Spacing.medium }}>
+        {/* Button Section with consistent spacing */}
+        <View style={styles.buttonWrapper}>
           <TouchableOpacity
-            style={styles.messagingButton}
+            style={styles.commonButton}
             onPress={() => navigation.navigate("PushNotifications", { or: or })}
           >
-            <Text style={styles.buttonText}>Messaging</Text>
+            <Text style={styles.buttonText}>Surgery Progression</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.commonButton}
+            onPress={() => setIsTechModalVisible(true)}
+          >
+            <Text style={styles.buttonText}>Anesthesia Tech</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Button to go back to the previous screen */}
+        {/* Modal for Tech Options */}
+        <Modal
+          visible={isTechModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsTechModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Anesthesia Tech Options</Text>
+
+              <TouchableOpacity style={styles.callButton}>
+                <Text style={styles.buttonText}>Call Tech</Text>
+              </TouchableOpacity>
+
+              <Text style={styles.quickRequestTitle}>Quick Request:</Text>
+              <View style={styles.checkBoxContainer}>
+                {Object.keys(equipmentRequests).map((item) => (
+                  <CustomCheckBox
+                    key={item}
+                    label={formatLabel(item)}
+                    isChecked={equipmentRequests[item]}
+                    onPress={() =>
+                      setEquipmentRequests((prevState) => ({
+                        ...prevState,
+                        [item]: !prevState[item],
+                      }))
+                    }
+                  />
+                ))}
+              </View>
+
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmitRequest}
+              >
+                <Text style={styles.buttonText}>Submit Request</Text>
+              </TouchableOpacity>
+
+              <Button title="Close" onPress={() => setIsTechModalVisible(false)} />
+            </View>
+          </View>
+        </Modal>
+
         <Button title="Go Back" onPress={() => navigation.goBack()} />
       </View>
     </ScrollView>
   );
 };
 
-// Styles for the component
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.background,
@@ -133,18 +212,76 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginBottom: Spacing.xs,
   },
-  messagingButton: {
-    backgroundColor: Colors.primary || "#007AFF", // Adjust color if needed
+  buttonWrapper: {
+    marginVertical: Spacing.medium,
+  },
+  commonButton: {
+    backgroundColor: Colors.primary,
     borderRadius: Borders.radius.medium,
-    paddingVertical: Spacing.medium, // Vertical padding for height
-    marginHorizontal: Spacing.medium, // Side margins for spacing within container
+    paddingVertical: Spacing.medium,
     alignItems: "center",
-    justifyContent: "center",
+    marginBottom: Spacing.small,
+    width: "100%",
   },
   buttonText: {
-    color: "#FFFFFF", // White text for contrast
+    color: "#FFFFFF",
     fontSize: Fonts.size.medium,
     fontFamily: Fonts.family.bold,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "#FFF",
+    padding: Spacing.medium,
+    borderRadius: Borders.radius.medium,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.small,
+    textAlign: "center",
+  },
+  callButton: {
+    backgroundColor: Colors.secondary,
+    borderRadius: Borders.radius.medium,
+    paddingVertical: Spacing.medium,
+    alignItems: "center",
+    marginVertical: Spacing.small,
+  },
+  quickRequestTitle: {
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    marginVertical: Spacing.small,
+  },
+  checkBoxContainer: {
+    marginVertical: Spacing.small,
+  },
+  checkBoxItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: Spacing.xs,
+  },
+  checkBoxLabel: {
+    fontSize: Fonts.size.medium,
+    marginLeft: Spacing.small,
+  },
+  submitButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: Borders.radius.medium,
+    paddingVertical: Spacing.medium,
+    alignItems: "center",
+    marginVertical: Spacing.small,
   },
 });
 
