@@ -89,6 +89,27 @@ const DetailedOR = ({ route, navigation }) => {
     setIsTechModalVisible(false); // Close the modal after submitting
   };
 
+  const handleEmergencyAlert = async () => {
+    try {
+      const response = await fetch("http://10.0.0.55:8081/send-notification", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Emergency Alert!",
+          body: `Emergency in Operating Room Number ${or.id}!`,
+          data: { orId: or.id },
+          priority: "high",
+        }),
+      });
+      console.log("Emergency notification sent:", response);
+    } catch (error) {
+      console.error("Error sending emergency notification:", error);
+    }
+  };
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
@@ -119,18 +140,28 @@ const DetailedOR = ({ route, navigation }) => {
 
         {/* Button Section with consistent spacing */}
         <View style={styles.buttonWrapper}>
+          {/* Surgery Progression Button */}
           <TouchableOpacity
-            style={styles.commonButton}
+            style={[styles.baseButton, styles.primaryButton]}
             onPress={() => navigation.navigate("PushNotifications", { or: or })}
           >
             <Text style={styles.buttonText}>Surgery Progression</Text>
           </TouchableOpacity>
 
+          {/* Anesthesia Tech Button */}
           <TouchableOpacity
-            style={styles.commonButton}
+            style={[styles.baseButton, styles.primaryButton]}
             onPress={() => setIsTechModalVisible(true)}
           >
             <Text style={styles.buttonText}>Anesthesia Tech</Text>
+          </TouchableOpacity>
+
+          {/* Emergency Button */}
+          <TouchableOpacity
+            style={[styles.baseButton, styles.emergencyButton]}
+            onPress={handleEmergencyAlert}
+          >
+            <Text style={styles.buttonText}>Emergency in OR</Text>
           </TouchableOpacity>
         </View>
 
@@ -145,10 +176,14 @@ const DetailedOR = ({ route, navigation }) => {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Anesthesia Tech Options</Text>
 
-              <TouchableOpacity style={styles.callButton}>
+              {/* Call Tech Button */}
+              <TouchableOpacity
+                style={[styles.baseButton, styles.secondaryButton]}
+              >
                 <Text style={styles.buttonText}>Call Tech</Text>
               </TouchableOpacity>
 
+              {/* Quick Request Section */}
               <Text style={styles.quickRequestTitle}>Quick Request:</Text>
               <View style={styles.checkBoxContainer}>
                 {Object.keys(equipmentRequests).map((item) => (
@@ -166,8 +201,9 @@ const DetailedOR = ({ route, navigation }) => {
                 ))}
               </View>
 
+              {/* Submit Request Button */}
               <TouchableOpacity
-                style={styles.submitButton}
+                style={[styles.baseButton, styles.primaryButton]}
                 onPress={handleSubmitRequest}
               >
                 <Text style={styles.buttonText}>Submit Request</Text>
@@ -181,7 +217,12 @@ const DetailedOR = ({ route, navigation }) => {
           </View>
         </Modal>
 
-        <Button title="Go Back" onPress={() => navigation.goBack()} />
+        <TouchableOpacity
+          style={[styles.baseButton, styles.secondaryButton]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -218,21 +259,26 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginBottom: Spacing.xs,
   },
-  buttonWrapper: {
-    marginVertical: Spacing.medium,
-  },
-  commonButton: {
-    backgroundColor: Colors.primary,
-    borderRadius: Borders.radius.medium,
-    paddingVertical: Spacing.medium,
-    alignItems: "center",
-    marginBottom: Spacing.small,
-    width: "100%",
-  },
   buttonText: {
     color: "#FFFFFF",
     fontSize: Fonts.size.medium,
     fontFamily: Fonts.family.bold,
+  },
+  baseButton: {
+    borderRadius: Borders.radius.medium,
+    paddingVertical: Spacing.medium,
+    alignItems: "center",
+    marginBottom: Spacing.small, // Consistent spacing
+    width: "100%",
+  },
+  primaryButton: {
+    backgroundColor: Colors.primary, // Primary color for standard buttons
+  },
+  secondaryButton: {
+    backgroundColor: Colors.secondary, // Secondary color for "Go Back" button
+  },
+  emergencyButton: {
+    backgroundColor: "red", // Red color for emergency button
   },
   modalContainer: {
     flex: 1,
@@ -266,9 +312,10 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.small,
   },
   quickRequestTitle: {
-    fontSize: Fonts.size.medium,
+    fontSize: Fonts.size.large,
     fontFamily: Fonts.family.bold,
-    marginVertical: Spacing.small,
+    marginBottom: Spacing.small,
+    color: Colors.primary,
   },
   checkBoxContainer: {
     marginVertical: Spacing.small,
@@ -276,11 +323,13 @@ const styles = StyleSheet.create({
   checkBoxItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: Spacing.xs,
+    paddingVertical: Spacing.xs,
   },
   checkBoxLabel: {
     fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
     marginLeft: Spacing.small,
+    textTransform: "capitalize",
   },
   submitButton: {
     backgroundColor: Colors.primary,
@@ -288,6 +337,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.medium,
     alignItems: "center",
     marginVertical: Spacing.small,
+  },
+  buttonWrapper: {
+    marginVertical: Spacing.medium,
   },
 });
 

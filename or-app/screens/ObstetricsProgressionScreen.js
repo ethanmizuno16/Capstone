@@ -1,6 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
-import { useObstetrics } from '../context/ObstetricsContext';
+import React, { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+import { useObstetrics } from "../context/ObstetricsContext";
 
 const ObstetricsProgressionScreen = ({ route }) => {
   const { caseId } = route.params;
@@ -12,13 +19,17 @@ const ObstetricsProgressionScreen = ({ route }) => {
   }
 
   // Get the current stage index and set up the steps and animation state
-  const currentStageIndex = obCase.steps.findIndex((step) => step === obCase.status);
+  const currentStageIndex = obCase.steps.findIndex(
+    (step) => step === obCase.status,
+  );
   const [completed, setCompleted] = useState(
-    obCase.steps.map((_, index) => index <= currentStageIndex)
+    obCase.steps.map((_, index) => index <= currentStageIndex),
   );
 
   const animations = useRef(
-    obCase.steps.map((_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0))
+    obCase.steps.map(
+      (_, index) => new Animated.Value(index <= currentStageIndex ? 1 : 0),
+    ),
   ).current;
 
   const toggleStep = (index) => {
@@ -39,7 +50,9 @@ const ObstetricsProgressionScreen = ({ route }) => {
   };
 
   const sendPushNotification = async (caseId, newStage, caseType) => {
-    console.log(`Sending push notification for Case ${caseId}, stage ${newStage}`);
+    console.log(
+      `Sending push notification for Case ${caseId}, stage ${newStage}`,
+    );
     try {
       const response = await fetch("http://10.0.0.55:8081/send-notification", {
         // Replace with your local IP address
@@ -58,28 +71,6 @@ const ObstetricsProgressionScreen = ({ route }) => {
       console.log("Notification sent:", response);
     } catch (error) {
       console.error("Error sending notification:", error);
-    }
-  };
-
-  const sendEmergencyNotification = async () => {
-    console.log(`Sending emergency notification for OB Room ${obCase.id}`);
-    try {
-      const response = await fetch("http://10.0.0.55:8081/send-notification", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "Emergency Alert!",
-          body: `Emergency in Obstetrics Room Number ${obCase.id}!`,
-          data: { caseId: obCase.id },
-          priority: "high",
-        }),
-      });
-      console.log("Emergency notification sent:", response);
-    } catch (error) {
-      console.error("Error sending emergency notification:", error);
     }
   };
 
@@ -124,10 +115,6 @@ const ObstetricsProgressionScreen = ({ route }) => {
             </TouchableOpacity>
           </View>
         ))}
-
-        <TouchableOpacity style={styles.emergencyButton} onPress={sendEmergencyNotification}>
-          <Text style={styles.emergencyButtonText}>Emergency in OB Room</Text>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -184,21 +171,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-  },
-  emergencyButton: {
-    backgroundColor: "red",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 20,
-    marginBottom: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  emergencyButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
 

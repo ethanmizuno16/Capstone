@@ -66,33 +66,6 @@ const PushNotificationsScreen = ({ route, navigation }) => {
     }
   };
 
-  const sendEmergencyNotification = async () => {
-    console.log(`Sending emergency notification for OR ${or.id}`);
-    try {
-      const response = await fetch("http://10.0.0.55:8081/send-notification", {
-        // Updated with your local IP address
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "Emergency Alert!",
-          body: `Emergency in Operating Room Number ${or.id}!`,
-          data: { orId: or.id },
-          priority: "high",
-        }),
-      });
-      console.log("Emergency notification sent:", response);
-    } catch (error) {
-      console.error("Error sending emergency notification:", error);
-    }
-  };
-
-  const handleEmergencyAlert = () => {
-    sendEmergencyNotification(); // Send high-priority alert
-  };
-
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
@@ -134,13 +107,6 @@ const PushNotificationsScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         ))}
-
-        <TouchableOpacity
-          style={styles.emergencyButton}
-          onPress={handleEmergencyAlert}
-        >
-          <Text style={styles.emergencyButtonText}>Emergency in OR</Text>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -197,21 +163,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-  },
-  emergencyButton: {
-    backgroundColor: "red",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 20,
-    marginBottom: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  emergencyButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
 

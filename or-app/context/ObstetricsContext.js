@@ -10,7 +10,7 @@ export const ObstetricsProvider = ({ children }) => {
     obstetricsData.map((caseItem) => ({
       ...caseItem,
       currentStep: caseItem.steps[0], // Start with the first step
-    }))
+    })),
   );
 
   const getSteps = (caseId) => {
@@ -27,7 +27,7 @@ export const ObstetricsProvider = ({ children }) => {
           return { ...obCase, currentStep: newStep };
         }
         return obCase;
-      })
+      }),
     );
   };
 

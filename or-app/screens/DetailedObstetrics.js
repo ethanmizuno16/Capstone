@@ -16,15 +16,15 @@ import { MaterialIcons } from "@expo/vector-icons"; // Import icons for custom c
 
 // Custom checkbox component
 const CustomCheckBox = ({ isChecked, onPress, label }) => (
-    <TouchableOpacity style={styles.checkBoxItem} onPress={onPress}>
-      <MaterialIcons
-        name={isChecked ? "check-box" : "check-box-outline-blank"}
-        size={28} // Slightly increase icon size for better visibility
-        color={Colors.primary}
-      />
-      <Text style={styles.checkBoxLabel}>{label}</Text>
-    </TouchableOpacity>
-  );
+  <TouchableOpacity style={styles.checkBoxItem} onPress={onPress}>
+    <MaterialIcons
+      name={isChecked ? "check-box" : "check-box-outline-blank"}
+      size={28} // Slightly increase icon size for better visibility
+      color={Colors.primary}
+    />
+    <Text style={styles.checkBoxLabel}>{label}</Text>
+  </TouchableOpacity>
+);
 
 const DetailedObstetrics = ({ route, navigation }) => {
   const { caseId } = route.params;
@@ -58,6 +58,27 @@ const DetailedObstetrics = ({ route, navigation }) => {
     );
     setIsTechModalVisible(false); // Close the modal after submitting
   };
+  const sendEmergencyNotification = async () => {
+    console.log(`Sending emergency notification for OB Room ${obCase.id}`);
+    try {
+      const response = await fetch("http://10.0.0.55:8081/send-notification", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Emergency Alert!",
+          body: `Emergency in Obstetrics Room Number ${obCase.id}!`,
+          data: { caseId: obCase.id },
+          priority: "high",
+        }),
+      });
+      console.log("Emergency notification sent:", response);
+    } catch (error) {
+      console.error("Error sending emergency notification:", error);
+    }
+  };
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -68,7 +89,9 @@ const DetailedObstetrics = ({ route, navigation }) => {
           <Text style={styles.detailText}>Room: {obCase.roomNumber}</Text>
           <Text style={styles.detailText}>Status: {obCase.status}</Text>
           <Text style={styles.detailText}>Type: {obCase.caseType}</Text>
-          <Text style={styles.detailText}>Current Stage: {obCase.currentStep}</Text>
+          <Text style={styles.detailText}>
+            Current Stage: {obCase.currentStep}
+          </Text>
           <Text style={styles.detailText}>
             Surgery Progression: {getCompletionPercentage(caseId)}
           </Text>
@@ -79,7 +102,7 @@ const DetailedObstetrics = ({ route, navigation }) => {
 
         {/* Surgery Progression Button */}
         <TouchableOpacity
-          style={styles.messagingButton}
+          style={[styles.baseButton, styles.primaryButton]}
           onPress={() =>
             navigation.navigate("ObstetricsProgression", { caseId: obCase.id })
           }
@@ -89,61 +112,27 @@ const DetailedObstetrics = ({ route, navigation }) => {
 
         {/* Anesthesia Tech Button */}
         <TouchableOpacity
-          style={styles.messagingButton}
+          style={[styles.baseButton, styles.primaryButton]}
           onPress={() => setIsTechModalVisible(true)}
         >
           <Text style={styles.buttonText}>Anesthesia Tech</Text>
         </TouchableOpacity>
 
-        {/* Anesthesia Tech Modal */}
-        <Modal
-          visible={isTechModalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={() => setIsTechModalVisible(false)}
+        {/* Emergency Button */}
+        <TouchableOpacity
+          style={[styles.baseButton, styles.emergencyButton]}
+          onPress={sendEmergencyNotification}
         >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Anesthesia Tech Options</Text>
+          <Text style={styles.buttonText}>Emergency in Room</Text>
+        </TouchableOpacity>
 
-              {/* Call Tech Button */}
-              <TouchableOpacity style={styles.callButton}>
-                <Text style={styles.buttonText}>Call Tech</Text>
-              </TouchableOpacity>
-
-              {/* Quick Request Section */}
-              <Text style={styles.quickRequestTitle}>Quick Request:</Text>
-              <View style={styles.checkBoxContainer}>
-                {Object.keys(equipmentRequests).map((item) => (
-                  <CustomCheckBox
-                    key={item}
-                    label={item.replace(/([A-Z])/g, " $1")} // Format label
-                    isChecked={equipmentRequests[item]}
-                    onPress={() =>
-                      setEquipmentRequests((prevState) => ({
-                        ...prevState,
-                        [item]: !prevState[item],
-                      }))
-                    }
-                  />
-                ))}
-              </View>
-
-              {/* Submit Request Button */}
-              <TouchableOpacity
-                style={styles.submitButton}
-                onPress={handleSubmitRequest}
-              >
-                <Text style={styles.buttonText}>Submit Request</Text>
-              </TouchableOpacity>
-
-              <Button title="Close" onPress={() => setIsTechModalVisible(false)} />
-            </View>
-          </View>
-        </Modal>
-
-        {/* Button to go back to the previous screen */}
-        <Button title="Go Back" onPress={() => navigation.goBack()} />
+        {/* Go Back Button */}
+        <TouchableOpacity
+          style={[styles.baseButton, styles.secondaryButton]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -181,17 +170,26 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginBottom: Spacing.xs,
   },
-  messagingButton: {
-    backgroundColor: Colors.primary,
-    borderRadius: Borders.radius.medium,
-    paddingVertical: Spacing.medium,
-    alignItems: "center",
-    marginBottom: Spacing.small,
-  },
   buttonText: {
     color: "#FFFFFF",
     fontSize: Fonts.size.medium,
     fontFamily: Fonts.family.bold,
+  },
+  baseButton: {
+    borderRadius: Borders.radius.medium,
+    paddingVertical: Spacing.medium,
+    alignItems: "center",
+    marginBottom: Spacing.small, // Consistent spacing
+    width: "100%",
+  },
+  primaryButton: {
+    backgroundColor: Colors.primary, // Primary color for standard buttons
+  },
+  secondaryButton: {
+    backgroundColor: Colors.secondary, // Secondary color for "Go Back" button
+  },
+  emergencyButton: {
+    backgroundColor: "red", // Red color for emergency button
   },
   modalContainer: {
     flex: 1,
@@ -225,10 +223,10 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.small,
   },
   quickRequestTitle: {
-    fontSize: Fonts.size.large, // Larger font size for the title
+    fontSize: Fonts.size.large,
     fontFamily: Fonts.family.bold,
     marginBottom: Spacing.small,
-    color: Colors.primary, // Primary color to make it stand out
+    color: Colors.primary,
   },
   checkBoxContainer: {
     marginVertical: Spacing.small,
@@ -236,13 +234,13 @@ const styles = StyleSheet.create({
   checkBoxItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: Spacing.xs, // Add padding between items
+    paddingVertical: Spacing.xs,
   },
   checkBoxLabel: {
-    fontSize: Fonts.size.medium, // Increase font size for better readability
-    fontFamily: Fonts.family.bold, // Make the text bold for emphasis
-    marginLeft: Spacing.small, // Space between checkbox and label
-    textTransform: "capitalize", // Capitalize each label for consistency
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
+    marginLeft: Spacing.small,
+    textTransform: "capitalize",
   },
   submitButton: {
     backgroundColor: Colors.primary,
@@ -250,6 +248,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.medium,
     alignItems: "center",
     marginVertical: Spacing.small,
+  },
+  buttonWrapper: {
+    marginVertical: Spacing.medium,
   },
 });
 

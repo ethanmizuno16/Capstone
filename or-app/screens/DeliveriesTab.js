@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useObstetrics } from "../context/ObstetricsContext";
 import { Colors, Fonts, Spacing } from "../Theme";
@@ -9,7 +15,11 @@ const DeliveriesTab = () => {
   const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("DetailedObstetrics", { caseId: item.id })}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("DetailedObstetrics", { caseId: item.id })
+      }
+    >
       <View style={styles.caseContainer}>
         <Text style={styles.caseTitle}>{item.patientName}</Text>
         <Text style={styles.caseDetail}>Room: {item.roomNumber}</Text>
