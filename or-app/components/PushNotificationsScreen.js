@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-// Correct the import path for SurgeryContext
-import { useSurgery } from "../context/SurgeryContext"; // Corrected path
+import { useSurgery } from "../context/SurgeryContext";
+import { Colors, Fonts, Spacing, Borders } from "../Theme"; // Import theme
 
 const PushNotificationsScreen = ({ route, navigation }) => {
   const { or } = route.params;
-  const { getSurgerySteps, updateSurgeryStage } = useSurgery(); // Get functions from context
-  const steps = getSurgerySteps(or.surgeryType); // Fetch steps for the specific surgery type
+  const { getSurgerySteps, updateSurgeryStage } = useSurgery();
+  const steps = getSurgerySteps(or.surgeryType);
 
   const currentStageIndex = steps.findIndex((step) => step === or.surgeryStage);
   const [completed, setCompleted] = useState(
@@ -38,8 +38,8 @@ const PushNotificationsScreen = ({ route, navigation }) => {
     }).start();
 
     if (newCompleted[index]) {
-      updateSurgeryStage(or.id, steps[index]); // Update the surgery stage in context
-      sendPushNotification(or.id, steps[index], or.surgeryType); // Send push notification
+      updateSurgeryStage(or.id, steps[index]);
+      sendPushNotification(or.id, steps[index], or.surgeryType);
     }
   };
 
@@ -47,7 +47,6 @@ const PushNotificationsScreen = ({ route, navigation }) => {
     console.log(`Sending push notification for OR ${orId}, stage ${newStage}`);
     try {
       const response = await fetch("http://10.0.0.55:8081/send-notification", {
-        // Updated with your local IP address
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -70,8 +69,8 @@ const PushNotificationsScreen = ({ route, navigation }) => {
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Text style={styles.header}>{or.surgeryType}</Text>
-        <Text style={styles.subHeader}>{or.id}</Text>
-        <Text style={styles.subHeader}>{or.surgeonName}</Text>
+        <Text style={styles.subHeader}>Operating Room: {or.id}</Text>
+        <Text style={styles.subHeader}>Surgeon: {or.surgeonName}</Text>
         <Text style={styles.notificationHeader}>Push Notification</Text>
 
         {steps.map((step, index) => (
@@ -82,7 +81,10 @@ const PushNotificationsScreen = ({ route, navigation }) => {
                 {
                   backgroundColor: animations[index].interpolate({
                     inputRange: [0, 1],
-                    outputRange: ["lightgreen", "#cccccc"],
+                    outputRange: [
+                      Colors.successBackground,
+                      Colors.inactiveBackground,
+                    ],
                   }),
                 },
               ]}
@@ -99,7 +101,7 @@ const PushNotificationsScreen = ({ route, navigation }) => {
                   {
                     backgroundColor: animations[index].interpolate({
                       inputRange: [0, 1],
-                      outputRange: ["transparent", "blue"],
+                      outputRange: ["transparent", Colors.primary],
                     }),
                   },
                 ]}
@@ -107,6 +109,14 @@ const PushNotificationsScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         ))}
+
+        {/* Go Back Button */}
+        <TouchableOpacity
+          style={[styles.baseButton, styles.secondaryButton]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -114,55 +124,81 @@ const PushNotificationsScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
   },
   container: {
-    padding: 20,
+    padding: Spacing.medium,
+    backgroundColor: Colors.background,
   },
   header: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: Fonts.size.large,
+    fontFamily: Fonts.family.bold,
+    color: Colors.primary,
     textAlign: "center",
-    marginVertical: 10,
+    marginVertical: Spacing.small,
   },
   subHeader: {
-    fontSize: 18,
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.regular,
+    color: Colors.text,
     textAlign: "center",
-    marginVertical: 5,
+    marginVertical: Spacing.xs,
   },
   notificationHeader: {
     textAlign: "right",
-    fontWeight: "bold",
-    fontSize: 14,
-    marginTop: 10,
-    marginBottom: 10,
+    fontWeight: Fonts.family.bold,
+    fontSize: Fonts.size.small,
+    color: Colors.secondary,
+    marginTop: Spacing.small,
+    marginBottom: Spacing.medium,
   },
   stepContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: Spacing.small,
+    backgroundColor: Colors.cardBackground,
+    borderRadius: Borders.radius.medium,
+    paddingHorizontal: Spacing.medium,
+    marginBottom: Spacing.xs,
   },
   stepText: {
     flex: 0.8,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginRight: 10,
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.regular,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.small,
+    borderRadius: Borders.radius.small,
+    color: Colors.text,
   },
   notificationButton: {
     width: 30,
     height: 30,
-    borderRadius: 15,
+    borderRadius: Borders.radius.full,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#add8e6",
+    borderColor: Colors.primary,
   },
   checkboxInner: {
     width: 20,
     height: 20,
-    borderRadius: 10,
+    borderRadius: Borders.radius.full,
+  },
+  baseButton: {
+    borderRadius: Borders.radius.medium,
+    paddingVertical: Spacing.medium,
+    alignItems: "center",
+    marginVertical: Spacing.small, // Consistent spacing
+    width: "100%",
+  },
+  secondaryButton: {
+    backgroundColor: Colors.secondary, // Secondary color for "Go Back" button
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: Fonts.size.medium,
+    fontFamily: Fonts.family.bold,
   },
 });
 

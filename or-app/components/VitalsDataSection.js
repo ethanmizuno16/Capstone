@@ -152,7 +152,7 @@ const VitalsDataSection = () => {
       <View style={styles.chartContainer}>
         <LineChart
           data={{
-            labels: Array.from({ length: 10 }, (_, i) => (i + 1).toString()), // 10 labels for 10 points
+            labels: [], // Set to empty to hide x-axis labels
             datasets: [{ data: chartData.map((value) => parseFloat(value)) }],
           }}
           width={Dimensions.get("window").width * 0.85} // Set width to 85% of the screen for centering

@@ -12,22 +12,14 @@
     "caseType": "Vaginal Delivery",
     "status": "In Labor",
     "roomNumber": "101",
-    "steps": ["Admitted", "In Labor", "Ready to Push", "Delivery Complete"]
-  },
-  {
-    "id": "OB Room 2",
-    "patientName": "Sarah Brown",
-    "doctorName": "Dr. James Oliver",
-    "shift": "Night Shift",
-    "replacement": null,
-    "caseType": "C-Section",
-    "status": "Scheduled for C-section",
-    "roomNumber": "102",
     "steps": [
-      "Prepped for Surgery",
-      "Incision",
-      "Baby Delivered",
-      "Surgery Complete"
+      "Admission and Initial Assessment",
+      "Labor Monitoring",
+      "Pain Management",
+      "Ready to Push",
+      "Delivery of Baby",
+      "Delivery of Placenta",
+      "Post-Delivery Monitoring"
     ]
   },
   {
@@ -44,10 +36,13 @@
     "status": "Observation",
     "roomNumber": "103",
     "steps": [
-      "Admitted",
-      "Labor Progressing",
-      "Close Monitoring",
-      "Delivery Complete"
+      "Admission and Assessment",
+      "Vital Signs and Fetal Monitoring",
+      "Pain Management (if needed)",
+      "Ongoing Labor Progress Assessment",
+      "Decision for Further Intervention or Observation",
+      "Preparation for Delivery (if needed)",
+      "Postpartum Monitoring (if delivery occurs)"
     ]
   }
 ]

@@ -76,5 +76,29 @@
       "Closing",
       "Extubation"
     ]
+  },
+  {
+    "surgeryType": "Labor Monitoring",
+    "steps": [
+      "Admission and Assessment",
+      "Vital Signs and Fetal Monitoring",
+      "Pain Management (if needed)",
+      "Ongoing Labor Progress Assessment",
+      "Decision for Further Intervention or Observation",
+      "Preparation for Delivery (if needed)",
+      "Postpartum Monitoring (if delivery occurs)"
+    ]
+  },
+  {
+    "surgeryType": "Vaginal Delivery",
+    "steps": [
+      "Admission and Initial Assessment",
+      "Labor Monitoring",
+      "Pain Management",
+      "Ready to Push",
+      "Delivery of Baby",
+      "Delivery of Placenta",
+      "Post-Delivery Monitoring"
+    ]
   }
 ]

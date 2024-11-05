@@ -11,15 +11,14 @@ import {
 } from "react-native";
 import { Colors, Fonts, Spacing, Borders } from "../Theme";
 import { useObstetrics } from "../context/ObstetricsContext";
-import VitalsDataSection from "../components/VitalsDataSection"; // Import VitalsDataSection
-import { MaterialIcons } from "@expo/vector-icons"; // Import icons for custom checkbox
+import VitalsDataSection from "../components/VitalsDataSection";
+import { MaterialIcons } from "@expo/vector-icons";
 
-// Custom checkbox component
 const CustomCheckBox = ({ isChecked, onPress, label }) => (
   <TouchableOpacity style={styles.checkBoxItem} onPress={onPress}>
     <MaterialIcons
       name={isChecked ? "check-box" : "check-box-outline-blank"}
-      size={28} // Slightly increase icon size for better visibility
+      size={28}
       color={Colors.primary}
     />
     <Text style={styles.checkBoxLabel}>{label}</Text>
@@ -44,10 +43,6 @@ const DetailedObstetrics = ({ route, navigation }) => {
     return <Text>No data available for this case.</Text>;
   }
 
-  const handleProgression = () => {
-    updateCaseStep(caseId);
-  };
-
   const handleSubmitRequest = () => {
     const selectedRequests = Object.keys(equipmentRequests).filter(
       (item) => equipmentRequests[item],
@@ -56,8 +51,9 @@ const DetailedObstetrics = ({ route, navigation }) => {
       "Request Submitted",
       `Equipment requested: ${selectedRequests.join(", ")}`,
     );
-    setIsTechModalVisible(false); // Close the modal after submitting
+    setIsTechModalVisible(false);
   };
+
   const sendEmergencyNotification = async () => {
     console.log(`Sending emergency notification for OB Room ${obCase.id}`);
     try {
@@ -97,10 +93,8 @@ const DetailedObstetrics = ({ route, navigation }) => {
           </Text>
         </View>
 
-        {/* Vitals Data Section */}
         <VitalsDataSection />
 
-        {/* Surgery Progression Button */}
         <TouchableOpacity
           style={[styles.baseButton, styles.primaryButton]}
           onPress={() =>
@@ -110,7 +104,6 @@ const DetailedObstetrics = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Surgery Progression</Text>
         </TouchableOpacity>
 
-        {/* Anesthesia Tech Button */}
         <TouchableOpacity
           style={[styles.baseButton, styles.primaryButton]}
           onPress={() => setIsTechModalVisible(true)}
@@ -118,7 +111,6 @@ const DetailedObstetrics = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Anesthesia Tech</Text>
         </TouchableOpacity>
 
-        {/* Emergency Button */}
         <TouchableOpacity
           style={[styles.baseButton, styles.emergencyButton]}
           onPress={sendEmergencyNotification}
@@ -126,7 +118,6 @@ const DetailedObstetrics = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Emergency in Room</Text>
         </TouchableOpacity>
 
-        {/* Go Back Button */}
         <TouchableOpacity
           style={[styles.baseButton, styles.secondaryButton]}
           onPress={() => navigation.goBack()}
@@ -134,6 +125,53 @@ const DetailedObstetrics = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Anesthesia Tech Modal */}
+      <Modal
+        visible={isTechModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setIsTechModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Anesthesia Tech Options</Text>
+            <TouchableOpacity
+              style={[styles.baseButton, styles.secondaryButton]}
+              onPress={() => Alert.alert("Calling Tech...")}
+            >
+              <Text style={styles.buttonText}>Call Tech</Text>
+            </TouchableOpacity>
+            <Text style={styles.quickRequestTitle}>Quick Request:</Text>
+            <View style={styles.checkBoxContainer}>
+              {Object.keys(equipmentRequests).map((item) => (
+                <CustomCheckBox
+                  key={item}
+                  label={item.replace(/([A-Z])/g, " $1")}
+                  isChecked={equipmentRequests[item]}
+                  onPress={() =>
+                    setEquipmentRequests((prevState) => ({
+                      ...prevState,
+                      [item]: !prevState[item],
+                    }))
+                  }
+                />
+              ))}
+            </View>
+            <TouchableOpacity
+              style={[styles.baseButton, styles.primaryButton]}
+              onPress={handleSubmitRequest}
+            >
+              <Text style={styles.buttonText}>Submit Request</Text>
+            </TouchableOpacity>
+            <Button
+              title="Close"
+              onPress={() => setIsTechModalVisible(false)}
+              color={Colors.primary}
+            />
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
