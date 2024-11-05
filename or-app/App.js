@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native"; // Provides navi
 // Import your custom components and services
 import MenuInterface from "./navigation/MenuInterface"; // Your navigation menu interface
 import { SurgeryProvider } from "./context/SurgeryContext"; // Context provider for surgeries
+import { ObstetricsProvider } from "./context/ObstetricsContext"; // Context provider for obstetrics cases
 import { registerForPushNotificationsAsync } from "./services/notifications"; // Function to register for push notifications
 
 // Import notifications handling from Expo and alert handling from React Native
@@ -65,16 +66,18 @@ export default function App() {
 
   // Return the app's main component tree
   return (
-    // Wrap everything in the SurgeryProvider to make surgery-related data available to all components
+    // Wrap everything in the SurgeryProvider and ObstetricsProvider to make both data sets available to all components
     <SurgeryProvider>
-      {/* Wrap the entire app in PaperProvider to enable react-native-paper components */}
-      <PaperProvider>
-        {/* NavigationContainer provides the navigation context for the app */}
-        <NavigationContainer>
-          {/* MenuInterface contains the navigation menu (drawer or stack) */}
-          <MenuInterface />
-        </NavigationContainer>
-      </PaperProvider>
+      <ObstetricsProvider>
+        {/* Wrap the entire app in PaperProvider to enable react-native-paper components */}
+        <PaperProvider>
+          {/* NavigationContainer provides the navigation context for the app */}
+          <NavigationContainer>
+            {/* MenuInterface contains the navigation menu (drawer or stack) */}
+            <MenuInterface />
+          </NavigationContainer>
+        </PaperProvider>
+      </ObstetricsProvider>
     </SurgeryProvider>
   );
 }

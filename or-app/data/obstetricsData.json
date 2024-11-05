@@ -1,0 +1,59 @@
+[
+    {
+      "id": "OB Room 1",
+      "patientName": "Jane Doe",
+      "doctorName": "Dr. Emily Clark",
+      "shift": "Day Shift",
+      "replacement": {
+        "name": "Dr. Rachel Green",
+        "shift": "Night Shift",
+        "time": "6:00 PM"
+      },
+      "caseType": "Vaginal Delivery",
+      "status": "In Labor",
+      "roomNumber": "101",
+      "steps": [
+        "Admitted",
+        "In Labor",
+        "Ready to Push",
+        "Delivery Complete"
+      ]
+    },
+    {
+      "id": "OB Room 2",
+      "patientName": "Sarah Brown",
+      "doctorName": "Dr. James Oliver",
+      "shift": "Night Shift",
+      "replacement": null,
+      "caseType": "C-Section",
+      "status": "Scheduled for C-section",
+      "roomNumber": "102",
+      "steps": [
+        "Prepped for Surgery",
+        "Incision",
+        "Baby Delivered",
+        "Surgery Complete"
+      ]
+    },
+    {
+      "id": "OB Room 3",
+      "patientName": "Olivia Green",
+      "doctorName": "Dr. Sarah Johnson",
+      "shift": "Day Shift",
+      "replacement": {
+        "name": "Dr. Michael Liu",
+        "shift": "Evening Shift",
+        "time": "4:00 PM"
+      },
+      "caseType": "Labor Monitoring",
+      "status": "Observation",
+      "roomNumber": "103",
+      "steps": [
+        "Admitted",
+        "Labor Progressing",
+        "Close Monitoring",
+        "Delivery Complete"
+      ]
+    }
+  ]
+  

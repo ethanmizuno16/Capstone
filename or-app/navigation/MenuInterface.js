@@ -17,6 +17,8 @@ import AcutePainScreen from "../screens/AcutePainScreen";
 import ObstetricsScreen from "../screens/ObstetricsScreen";
 import ProfileScreen from "../components/ProfileScreen";
 import PushNotificationsScreen from "../components/PushNotificationsScreen";
+import DetailedObstetrics from "../screens/DetailedObstetrics"; // Import the DetailedObstetrics screen
+import ObstetricsProgressionScreen from "../screens/ObstetricsProgressionScreen"; // Import the new screen
 
 // Create Stack and Drawer Navigators
 const Stack = createStackNavigator();
@@ -65,6 +67,16 @@ function HomeStack() {
         name="PushNotifications"
         component={PushNotificationsScreen}
         options={{ title: "Messaging" }}
+      />
+      <Stack.Screen
+        name="DetailedObstetrics"
+        component={DetailedObstetrics}
+        options={{ title: "Obstetrics Case Details" }}
+      />
+      <Stack.Screen
+        name="ObstetricsProgression"
+        component={ObstetricsProgressionScreen}
+        options={{ title: "Obstetrics Progression" }}
       />
     </Stack.Navigator>
   );

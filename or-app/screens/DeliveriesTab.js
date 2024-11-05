@@ -1,68 +1,32 @@
-import React, { useMemo } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import { useSurgery } from "../context/SurgeryContext";
-import { Colors, Fonts, Spacing } from "../Theme"; // Import theme variables
+import React from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useObstetrics } from "../context/ObstetricsContext";
+import { Colors, Fonts, Spacing } from "../Theme";
 
-const DeliveriesTab = ({ navigation }) => {
-  const { orData, getSurgerySteps } = useSurgery();
+const DeliveriesTab = () => {
+  const { obCases } = useObstetrics();
+  const navigation = useNavigation();
 
-  // Filter OR data to only show delivery-related cases (e.g., C-Sections)
-  const deliveryCases = orData?.filter(
-    (or) => or.surgeryType === "Cesarean Section",
-  );
-
-  // Memoize completion percentage calculation for efficiency
-  const getCompletionPercentage = useMemo(
-    () => (surgeryType, currentStep) => {
-      const steps = getSurgerySteps(surgeryType);
-      if (!steps) return 0; // Handle case where steps might be undefined
-      const currentStepIndex = steps.indexOf(currentStep);
-      return ((currentStepIndex + 1) / steps.length) * 100;
-    },
-    [getSurgerySteps],
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate("DetailedObstetrics", { caseId: item.id })}>
+      <View style={styles.caseContainer}>
+        <Text style={styles.caseTitle}>{item.patientName}</Text>
+        <Text style={styles.caseDetail}>Room: {item.roomNumber}</Text>
+        <Text style={styles.caseDetail}>Doctor: {item.doctorName}</Text>
+        <Text style={styles.caseDetail}>Status: {item.status}</Text>
+        <Text style={styles.caseDetail}>Type: {item.caseType}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Active Deliveries</Text>
-      {deliveryCases && deliveryCases.length > 0 ? (
-        <FlatList
-          data={deliveryCases}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() =>
-                navigation.navigate("DetailedOR", { orId: item.id })
-              }
-            >
-              <Text style={styles.name}>Patient: {item.id}</Text>
-              <Text style={styles.details}>Surgeon: {item.surgeonName}</Text>
-              <Text style={styles.details}>
-                Anesthesiologist: {item.raName}
-              </Text>
-              <Text style={styles.details}>
-                Progress:{" "}
-                {getCompletionPercentage(
-                  item.surgeryType,
-                  item.surgeryStage,
-                ).toFixed(0)}
-                % Complete
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      ) : (
-        <Text style={styles.noDataText}>
-          No active delivery cases available.
-        </Text>
-      )}
+      <FlatList
+        data={obCases}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };
@@ -70,41 +34,29 @@ const DeliveriesTab = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: Spacing.medium,
     backgroundColor: Colors.background,
+    padding: Spacing.medium,
   },
-  header: {
+  caseContainer: {
+    backgroundColor: Colors.cardBackground,
+    padding: Spacing.medium,
+    borderRadius: Spacing.small,
+    marginBottom: Spacing.small,
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  caseTitle: {
     fontSize: Fonts.size.large,
     fontFamily: Fonts.family.bold,
     color: Colors.primary,
-    marginBottom: Spacing.small,
+    marginBottom: Spacing.xs,
   },
-  card: {
-    padding: Spacing.medium,
-    backgroundColor: Colors.cardBackground,
-    marginVertical: Spacing.small,
-    borderRadius: 8,
-    shadowColor: Colors.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  name: {
-    fontSize: Fonts.size.medium,
-    fontFamily: Fonts.family.bold,
-    color: Colors.primary,
-  },
-  details: {
+  caseDetail: {
     fontSize: Fonts.size.small,
-    fontFamily: Fonts.family.regular,
-    color: Colors.textLight,
-  },
-  noDataText: {
-    fontSize: Fonts.size.medium,
-    color: Colors.textLight,
-    textAlign: "center",
-    marginTop: Spacing.large,
+    color: Colors.text,
+    marginBottom: Spacing.xs,
   },
 });
 
