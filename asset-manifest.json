@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.js": "/Capstone/static/js/main.64a1ddef.js",
+    "static/js/29.cfca4938.js": "/Capstone/static/js/29.cfca4938.js",
+    "static/media/MaterialCommunityIcons.ttf": "/Capstone/static/media/MaterialCommunityIcons.5d42b4e60858731e7b65.ttf",
+    "static/media/Ionicons.ttf": "/Capstone/static/media/Ionicons.9b6b1954a5eb6efeaf11.ttf",
+    "static/media/MaterialIcons.ttf": "/Capstone/static/media/MaterialIcons.f20305dee9d396fea5c7.ttf",
+    "static/media/FontAwesome5_Solid.ttf": "/Capstone/static/media/FontAwesome5_Solid.07c3313b24f7b1ca85ee.ttf",
+    "static/media/FontAwesome.ttf": "/Capstone/static/media/FontAwesome.1e59d2330b4c6deb84b3.ttf",
+    "static/media/FontAwesome5_Brands.ttf": "/Capstone/static/media/FontAwesome5_Brands.9e138496e8f1719c6ebf.ttf",
+    "static/media/FontAwesome5_Regular.ttf": "/Capstone/static/media/FontAwesome5_Regular.1017bce89c72f95bcf8e.ttf",
+    "favicon.ico": "/Capstone/favicon.ico",
+    "index.html": "/Capstone/index.html",
+    "static/media/rocket.png": "/Capstone/static/media/rocket.d2f3bf41d5e4515c39a9.png",
+    "static/media/bell.png": "/Capstone/static/media/bell.cf04af27d6a651c4b904.png",
+    "favicon-32.png": "/Capstone/favicon-32.png",
+    "static/media/star.png": "/Capstone/static/media/star.69c7138684828d68fe5a.png",
+    "static/media/heart.png": "/Capstone/static/media/heart.23b5c2c0eb77d50ff1b4.png",
+    "favicon-16.png": "/Capstone/favicon-16.png",
+    "manifest.json": "/Capstone/manifest.json",
+    "serve.json": "/Capstone/serve.json",
+    "main.64a1ddef.js.map": "/Capstone/static/js/main.64a1ddef.js.map",
+    "29.cfca4938.js.map": "/Capstone/static/js/29.cfca4938.js.map"
+  },
+  "entrypoints": [
+    "static/js/29.cfca4938.js",
+    "static/js/main.64a1ddef.js"
+  ]
+}
